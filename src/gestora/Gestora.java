@@ -1,5 +1,7 @@
 package gestora;
 
+import mensaje.Mensaje;
+
 import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,6 +44,8 @@ public class Gestora {
     }
 
     public static void comprobarLogin() {
+
+
     }
 
 }
