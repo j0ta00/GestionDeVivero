@@ -14,24 +14,16 @@ public class Gestora {
 
     private static String path = "ScriptBBDD/ScriptVivero.sql";
     private final static String PROPERTIESFILEPATH = "configuracion.properties";
+    private static Connection miConexion;
 
-
-    public static void comprobarInstalacion() {
-        Properties configuracion = new Properties();
-        Connection miConexion;
-        Statement query;
-        try (InputStream is = new FileInputStream(PROPERTIESFILEPATH)){
-            configuracion.load(is);
-            miConexion = getConnection(configuracion.getProperty("URL"), configuracion.getProperty("USUARIO"), configuracion.getProperty("CLAVE"));
-        } catch (SQLException e) {
-            Instalador();
-        } catch (FileNotFoundException e) {
-            System.out.println("error");
-        } catch (IOException e) {
-            System.out.println("error");
-        }
-
+    public Connection getMiConexion() {
+        return miConexion;
     }
+
+    public void setMiConexion(Connection miConexion) {
+        this.miConexion = miConexion;
+    }
+
     public static void Instalador() {
         String execCommand = "sqlcmd -i " + path;
         try {

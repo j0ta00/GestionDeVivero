@@ -12,17 +12,19 @@ public class Main {
     public static void main(String[] args) {
         teclado=new Scanner(System.in);
         Mensaje.introducirDatosLogin("USUARIO:");
+        DataAccess.incializarConexion();
     }
 
+    public static void realizarInstalacion(){ }
+
+
     public static void Logearse(){
-
-
         String usuario,contraseña;
         Mensaje.introducirDatosLogin("USUARIO:");
         usuario=teclado.nextLine();
         Mensaje.introducirDatosLogin("CONTRASEÑA:");
         contraseña=teclado.nextLine();
-        DataAccess.comprobarConexion();
+        DataAccess.
     }
 
 

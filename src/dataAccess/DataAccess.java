@@ -1,19 +1,27 @@
 package dataAccess;
 
+import entidades.Usuario;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
 
 public class DataAccess{
 
     private static Connection conexion;
+    private
     private static final String PROPERTIESFILEPATH="configuracion.properties";
+
+    public static Connection getConexion() {
+        return conexion;
+    }
+
+    public static void setConexion(Connection conexion) {
+        DataAccess.conexion = conexion;
+    }
 
     public static boolean incializarConexion() {
         Properties configuracion = new Properties();
@@ -32,7 +40,14 @@ public class DataAccess{
         return conexionExitosa;
     }
 
-    public consultar(){
+    public void consultarDatosLogin(Usuario usuario){
+        Statement consulta;ResultSet resultado;
+        try {
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT FROM USUARIOS WHERE Nombre=%s AND Contrasenhia=%s",usuario.getNombre(),usuario.getContrasenhia()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
     }
