@@ -12,7 +12,6 @@ import java.util.Properties;
 public class DataAccess{
 
     private static Connection conexion;
-    private
     private static final String PROPERTIESFILEPATH="configuracion.properties";
 
     public static Connection getConexion() {
@@ -40,15 +39,18 @@ public class DataAccess{
         return conexionExitosa;
     }
 
-    public void consultarDatosLogin(Usuario usuario){
-        Statement consulta;ResultSet resultado;
+    public static Usuario consultarDatosLogin(String usuario, String contrasenhia){
+        Statement consulta;ResultSet resultado=null;
+        Usuario usuarioEncontrado=null;
         try {
             consulta=conexion.createStatement();
-            resultado=consulta.executeQuery(String.format("SELECT FROM USUARIOS WHERE Nombre=%s AND Contrasenhia=%s",usuario.getNombre(),usuario.getContrasenhia()));
+            resultado=consulta.executeQuery(String.format("SELECT FROM USUARIOS WHERE Nombre=%s AND Contrasenhia=%s",usuario,contrasenhia));
+           if(resultado.next()){
+               usuarioEncontrado=new Usuario(resultado.getString("nombre"),resultado.getString("contraseña"),resultado.getBoolean("esGestor"));
+           }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
+        return usuarioEncontrado;
     }
 }
