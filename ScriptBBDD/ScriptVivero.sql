@@ -4,37 +4,37 @@ create database Vivero
 GO
 GO
 USE Vivero
-CREATE TABLE Producto(
+CREATE TABLE Productos(
                          Descripcion varchar(40),
                          Codigo int IDENTITY(1,1) PRIMARY KEY NOT NULL,
                          Precio_Unitario money NOT NULL,
                          Unidades_Disponibles int NULL,
 )
-CREATE TABLE Tipo_Planta(
+CREATE TABLE Tipo_Plantas(
                             Id int PRIMARY KEY NOT NULL,
                             Tipo varchar(15) NOT NULL
 )
 
-CREATE TABLE Planta(
+CREATE TABLE Plantas(
                        Codigo int NOT NULL PRIMARY KEY,
-                       CONSTRAINT FK_Producto_Planta FOREIGN KEY(Codigo) REFERENCES Producto(Codigo)
+                       CONSTRAINT FK_Producto_Planta FOREIGN KEY(Codigo) REFERENCES Productos(Codigo)
 )
 
-CREATE TABLE Tipo_Planta_Planta(
+CREATE TABLE Tipo_Plantas_Plantas(
                                    Id_Tipo_Planta int NOT NULL,
                                    Codigo_Planta int NOT NULL,
                                    CONSTRAINT PK_Tipo_Planta PRIMARY KEY(Id_Tipo_Planta,Codigo_Planta),
-                                   CONSTRAINT FK_Tipo_Planta FOREIGN KEY(Id_Tipo_Planta)REFERENCES Tipo_Planta(Id),
-                                   CONSTRAINT FK_Codigo_Planta FOREIGN KEY(Codigo_Planta) REFERENCES Planta(Codigo)
+                                   CONSTRAINT FK_Tipo_Planta FOREIGN KEY(Id_Tipo_Planta)REFERENCES Tipo_Plantas(Id),
+                                   CONSTRAINT FK_Codigo_Planta FOREIGN KEY(Codigo_Planta) REFERENCES Plantas(Codigo)
 
 )
 
-CREATE TABLE Jardineria(
+CREATE TABLE Jardinerias(
                            Codigo int NOT NULL,
-                           CONSTRAINT FK_Producto_Jardineria FOREIGN KEY(Codigo) REFERENCES Producto(Codigo)
+                           CONSTRAINT FK_Producto_Jardineria FOREIGN KEY(Codigo) REFERENCES Productos(Codigo)
 )
 
-CREATE TABLE Cliente(
+CREATE TABLE Clientes(
                         Nombre varchar(30) NOT NULL,
                         Dni varchar(9) PRIMARY KEY NOT NULL,
                         Direccion varchar(50) NULL,
@@ -45,7 +45,7 @@ CREATE TABLE Cliente(
 
 )
 
-CREATE TABLE Usuario(
+CREATE TABLE Usuarios(
                         Id int IDENTITY(1,1) NOT NULL,
                         EsGestor bit NOT NULL,
                         Usuario varchar(25) NOT NULL,
@@ -55,25 +55,25 @@ CREATE TABLE Usuario(
 )
 
 
-CREATE TABLE Factura(
+CREATE TABLE Facturas(
                         Id int IDENTITY(1,1) NOT NULL,
                         Dni_Cliente varchar(9) NOT NULL,
                         Vendedor int NOT NULL,
                         Fecha Date NOT NULL,
                         Importe money NULL,
                         Constraint PK_Factura PRIMARY KEY(Id),
-                        CONSTRAINT FK_Cliente_Factura FOREIGN KEY(Dni_Cliente) REFERENCES Cliente(Dni),
-                        CONSTRAINT FK_Vendedor_Factura FOREIGN KEY(Vendedor) REFERENCES Usuario(Id)
+                        CONSTRAINT FK_Cliente_Factura FOREIGN KEY(Dni_Cliente) REFERENCES Clientes(Dni),
+                        CONSTRAINT FK_Vendedor_Factura FOREIGN KEY(Vendedor) REFERENCES Usuarios(Id)
 )
 
 
-CREATE TABLE Producto_Factura(
+CREATE TABLE Productos_Facturas(
                                  Id_Factura int NOT NULL,
                                  Cantidad int NOT NULL,
                                  Codigo_Producto int NOT NULL,
                                  CONSTRAINT PK_Producto_Factura PRIMARY KEY(Id_Factura,Codigo_Producto),
-                                 CONSTRAINT FK_Codigo_Producto FOREIGN KEY(Codigo_Producto) REFERENCES Producto(Codigo),
-                                 CONSTRAINT FK_Id_Factura FOREIGN KEY(Id_Factura) REFERENCES Factura(Id)
+                                 CONSTRAINT FK_Codigo_Producto FOREIGN KEY(Codigo_Producto) REFERENCES Productos(Codigo),
+                                 CONSTRAINT FK_Id_Factura FOREIGN KEY(Id_Factura) REFERENCES Facturas(Id)
 )
 
 
@@ -94,7 +94,7 @@ CREATE TABLE Producto_Factura(
 
 
     GO
-CREATE OR ALTER TRIGGER ImporteFactura ON Producto_Factura
+CREATE OR ALTER TRIGGER ImporteFactura ON Productos_Facturas
 	AFTER INSERT AS
 BEGIN
 UPDATE Factura SET Importe=(SELECT Precio_Unitario FROM Producto AS P INNER JOIN inserted AS I ON P.Codigo=I.Codigo_Producto)*(SELECT Cantidad FROM inserted)

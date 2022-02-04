@@ -1,5 +1,7 @@
 package gestora;
 
+import entidades.Cliente;
+import entidades.Usuario;
 import mensaje.Mensaje;
 
 import java.io.*;
@@ -14,7 +16,25 @@ public class Gestora {
 
     private static String path = "ScriptBBDD/ScriptVivero.sql";
     private final static String PROPERTIESFILEPATH = "configuracion.properties";
+    private Cliente cliente;
+    private Usuario usuario;
     private static Connection miConexion;
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public Connection getMiConexion() {
         return miConexion;
@@ -24,7 +44,7 @@ public class Gestora {
         this.miConexion = miConexion;
     }
 
-    public static void Instalador() {
+    public void Instalador() {
         String execCommand = "sqlcmd -i " + path;
         try {
             /* directorio/ejecutable es el path del ejecutable y un nombre */
@@ -35,7 +55,7 @@ public class Gestora {
         }
     }
 
-    public static void comprobarLogin() {
+    public void comprobarLogin() {
 
 
     }

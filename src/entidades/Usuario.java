@@ -2,12 +2,22 @@ package entidades;
 
 public class Usuario {
     private String nombre, contrasenhia;
+    private int id;
     private boolean esGestor;
 
-    public Usuario(String nombre, String contrasenhia, boolean esGestor) {
+    public Usuario(int id,String nombre, String contrasenhia, boolean esGestor) {
         this.nombre = nombre;
         this.contrasenhia = contrasenhia;
         this.esGestor = esGestor;
+        this.id=id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {

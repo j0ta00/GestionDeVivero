@@ -90,5 +90,12 @@ public class Mensaje{
     }
 
 
+    public static void dniNoEncontrado(){
+        System.out.println("El dni introducido no corresponde con el de ningún cliente existente en la base de datos");
 
+    }
+
+    public static void dniInvalido() {
+        System.out.println("El dni es inválido ");
+    }
 }
