@@ -1,17 +1,26 @@
 package entidades;
 
 public class Cliente {
-private String nombre,Dni,Direccion,CodigoPostal,telefono,correoElectronico;
+private String nombre,Dni,Direccion,CodigoPostal,telefono,correoElectronico,ciudad;
 
-    public Cliente(String nombre, String dni, String direccion, String codigoPostal, String telefono, String correoElectronico) {
+
+    public Cliente(String nombre, String dni, String direccion, String codigoPostal,String ciudad,String telefono, String correoElectronico) {
         this.nombre = nombre;
         Dni = dni;
+        this.ciudad=ciudad;
         Direccion = direccion;
         CodigoPostal = codigoPostal;
         this.telefono = telefono;
         this.correoElectronico = correoElectronico;
     }
 
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
 
     public String getNombre() {
         return nombre;

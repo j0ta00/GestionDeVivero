@@ -2,6 +2,9 @@ package mensaje;
 
 public class Mensaje{
 
+
+
+
     public static void preguntarInstalacion(){
         System.out.println("Parece que su equipo no tiene instalado la base de datos necesaria para ejecutar el programa");
         System.out.println("¿Desea instalar la base de datos del programa?");
@@ -97,5 +100,14 @@ public class Mensaje{
 
     public static void dniInvalido() {
         System.out.println("El dni es inválido ");
+    }
+
+    public static void productoIntroducidoConExito() {
+        System.out.println("El producto ha sido vendido con éxito");
+    }
+
+    public static void productoNoEncontrado() {
+        System.out.println("No se ha encontrado el producto, escriba un código de producto existente");
+
     }
 }

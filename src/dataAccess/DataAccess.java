@@ -1,6 +1,8 @@
 package dataAccess;
 
 import entidades.Cliente;
+import entidades.Factura;
+import entidades.Producto;
 import entidades.Usuario;
 
 import java.io.FileInputStream;
@@ -62,7 +64,7 @@ public class DataAccess{
             resultado=consulta.executeQuery(String.format("SELECT * FROM Clientes WHERE Dni='%s'",dniCliente));
             if(resultado.next()){
                 cliente=new Cliente(resultado.getString("nombre"),resultado.getString("dni"),resultado.getString("direccion"),resultado.getString("codigoPostal"),
-                        resultado.getString("telefono"),resultado.getString("correoElectronico"));
+                        resultado.getString("ciudad"),resultado.getString("telefono"),resultado.getString("correoElectronico"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,25 +73,132 @@ public class DataAccess{
 
     }
 
-    public static Factura crearFactura(Cliente cliente,Usuario usuario) {
-        Factura factura =null;LocalDate tiempo=LocalDate.now();
+    public static boolean crearFactura(Cliente cliente,Usuario usuario) {
+        boolean creadoConExito=false;LocalDate tiempo=LocalDate.now();
         Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.execute(String.format("INSERT INTO FACTURAS VALUES (%d,%d,'%s',%d)",cliente.getDni(),usuario.getId(),tiempo.toString(),0));
-            factura=new factura(cliente.getDni(),usuario.getId(),tiempo,0);
+            consulta.executeUpdate(String.format("INSERT INTO FACTURAS VALUES (%d,%d,'%s',%d)",cliente.getDni(),usuario.getId(),tiempo,0));
+            creadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return  creadoConExito;
+        return creadoConExito;
     }
 
-    public static boolean insertarProductoEnPedido() {
+    public static boolean borrarFactura(){
+        boolean facturaBorradaConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("DELETE FROM FACTURAS WHERE Id=(SELECT MAX(Id) FROM FACTURAS)"));
+            facturaBorradaConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return facturaBorradaConExito;
+    }
+
+    public static boolean insertarCliente(Cliente cliente){
+        boolean clienteInsertadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("INSERT INTO CLIENTES VALUES (%d,'%s','%s','%s','%s','%s','%s')",cliente.getNombre(), cliente.getDni(),cliente.getDireccion()
+            ,cliente.getCodigoPostal(),cliente.getCiudad(),cliente.getTelefono(),cliente.getCorreoElectronico()));
+            clienteInsertadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clienteInsertadoConExito;
+    }
+    public static boolean insertarUsuario(Usuario usuario){
+        boolean usuarioInsertadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("INSERT INTO Usuarios VALUES (%d,%b,%d,'%s')",usuario.getId(),usuario.isEsGestor(),usuario.getNombre(),usuario.getContrasenhia()));
+            usuarioInsertadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarioInsertadoConExito;
+    }
+    public static boolean insertarProducto(Producto producto){
+        boolean usuarioInsertadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("INSERT INTO Productos VALUES ('%s',%d,%d,%d)",producto.getDescripcion(),producto.getCodigo(),producto.getPrecioUnitario(),producto.getUnidadesDisponibles()));
+            usuarioInsertadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarioInsertadoConExito;
+    }
+    public static boolean insertarTipoPlanta(TipoPlanta tipoPlanta){
+        boolean usuarioInsertadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("INSERT INTO Tipo_Planta VALUES (%d,'%s')",tipoPlanta.getId(),tipoPlanta.getTipo()));
+            usuarioInsertadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarioInsertadoConExito;
+    }
+
+
+    public static boolean borrarProducto(int idProducto){
+        boolean productoEliminadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("DELETE FROM Productor WHERE codigo=%d",idProducto));
+            productoEliminadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productoEliminadoConExito;
+    }
+
+    public static boolean borrarUsuario(int idUsuario){
+        boolean usuarioEliminadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("DELETE FROM Usuarios WHERE id=%d",idUsuario));
+            usuarioEliminadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarioEliminadoConExito;
+    }
+
+    public static boolean borrarCliente(int idCliente){
+        boolean clienteEliminadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("DELETE FROM Clientes WHERE id=%d",idCliente));
+            clienteEliminadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clienteEliminadoConExito;
+    }
+
+    public static boolean borrarTipoPlanta(int idTipoPlanta){
+        boolean tipoPlantaEliminadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("DELETE FROM Tipo_planta WHERE id=%d",idTipoPlanta));
+            tipoPlantaEliminadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tipoPlantaEliminadoConExito;
+    }
+
+    public static boolean insertarProductoEnPedido() {//en procesos de hacerlo
         boolean insertadoConExito=false;
         Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.execute(String.format("INSERT INTO PRODUCTOS_FACTURAS"));
+            consulta.executeUpdate(String.format("INSERT INTO PRODUCTOS_FACTURAS"));
             insertadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -42,7 +42,6 @@ public class Main {
             eleccion = teclado.nextInt();
         }while (eleccion !=1);
             realizarVenta();
-
     }
 
     public static void realizarVenta(){
@@ -64,7 +63,7 @@ public class Main {
     }
     public static void introducirProducto() {
         int codigoProducto;
-        DataAccess.crearFactura();
+        DataAccess.crearFactura(gestora.getCliente(),gestora.getUsuario());
         Mensaje.introducirCodigoProducto();
         Mensaje.confirmarAnulacion();
         codigoProducto = teclado.nextInt();
