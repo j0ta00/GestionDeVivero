@@ -15,7 +15,7 @@ CREATE TABLE Tipo_Plantas(
                             Tipo varchar(15) NOT NULL
 )
 
-CREATE TABLE Plantas(
+CREATE TABLE ProductosPlanta(
                        Codigo int NOT NULL PRIMARY KEY,
                        CONSTRAINT FK_Producto_Planta FOREIGN KEY(Codigo) REFERENCES Productos(Codigo)
 )
@@ -29,7 +29,7 @@ CREATE TABLE Tipo_Plantas_Plantas(
 
 )
 
-CREATE TABLE Jardinerias(
+CREATE TABLE ProductosJardineria(
                            Codigo int NOT NULL,
                            CONSTRAINT FK_Producto_Jardineria FOREIGN KEY(Codigo) REFERENCES Productos(Codigo)
 )

@@ -56,6 +56,19 @@ public class DataAccess{
         }
         return usuarioEncontrado;
     }
+    public static boolean consultarSiProductoEsPlanta(Producto producto){
+        Statement consulta;ResultSet resultado=null;boolean esPlanta=false;
+        try {
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT * FROM ProductosPlanta WHERE codigo='%s'",producto.getCodigo()));
+            esPlanta=resultado.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return esPlanta;
+    }
+
+
 
     public static Cliente consultarDatosDni(String dniCliente) {
         boolean dniEncontrado=false;Statement consulta;ResultSet resultado=null;Cliente cliente=null;
@@ -98,12 +111,58 @@ public class DataAccess{
         return facturaBorradaConExito;
     }
 
+    public static boolean modificarCliente(Cliente cliente){
+        boolean clienteModificadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("UPDATE CLIENTES SET  nombre='%s',dni=%d,direccion='%s', codigoPostal='%s', ciudad='%s', telefono='%s', coreoElectronico='%s'",cliente.getNombre(),cliente.getDni(),cliente.getDireccion()
+            ,cliente.getCodigoPostal(),cliente.getCiudad(),cliente.getTelefono(),cliente.getCorreoElectronico()));
+            clienteModificadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clienteModificadoConExito;
+    }
+    public static boolean modificarUsuario(Usuario usuario){
+        boolean usuarioModificadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("UPDATE Usuarios SET id=%d,esGestor=%b,nombre=%d,contrasenhia='%s' ",usuario.getId(),usuario.isEsGestor(),usuario.getNombre(),usuario.getContrasenhia()));
+            usuarioModificadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarioModificadoConExito;
+    }
+    public static boolean modificarProducto(Producto producto){
+        boolean productoModificadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("UPDATE Productos SET descripcion='%s',codigo=%d,precioUnitario=%d,unidadesDisponibles=%d",producto.getDescripcion(),producto.getCodigo(),producto.getPrecioUnitario(),producto.getUnidadesDisponibles()));
+            productoModificadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productoModificadoConExito;
+    }
+    public static boolean modificarTipoPlanta(TipoPlanta tipoPlanta){
+        boolean tipoPlantaModificadoConExito=false;Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("UPDATE Tipo_Planta SET id=%d,tipo='%s'",tipoPlanta.getId(),tipoPlanta.getTipo()));
+            tipoPlantaModificadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tipoPlantaModificadoConExito;
+    }
+
     public static boolean insertarCliente(Cliente cliente){
         boolean clienteInsertadoConExito=false;Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("INSERT INTO CLIENTES VALUES (%d,'%s','%s','%s','%s','%s','%s')",cliente.getNombre(), cliente.getDni(),cliente.getDireccion()
-            ,cliente.getCodigoPostal(),cliente.getCiudad(),cliente.getTelefono(),cliente.getCorreoElectronico()));
+            consulta.executeUpdate(String.format("INSERT INTO CLIENTES VALUES ('%s',%d,'%s','%s','%s','%s','%s')", cliente.getDni(),cliente.getNombre(),cliente.getDireccion()
+                    ,cliente.getCodigoPostal(),cliente.getCiudad(),cliente.getTelefono(),cliente.getCorreoElectronico()));
             clienteInsertadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();

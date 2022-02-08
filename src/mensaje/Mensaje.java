@@ -12,6 +12,12 @@ public class Mensaje{
         System.out.println("2) No");
     }
 
+public static void modificarDatos(String datoAModificar){
+    System.out.println("Introduce el Id/Codigo/Dni del elemento que deseas modificar");
+}
+
+
+
 
     /**
      * <p><b>Proposito:</b> Imprime los datos que se van a introducir para que se pueda realizar le login</p>
