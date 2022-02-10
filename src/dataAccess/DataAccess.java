@@ -145,17 +145,17 @@ public class DataAccess{
         }
         return productoModificadoConExito;
     }
-    public static boolean modificarTipoPlanta(TipoPlanta tipoPlanta){
-        boolean tipoPlantaModificadoConExito=false;Statement consulta;
-        try {
-            consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("UPDATE Tipo_Planta SET id=%d,tipo='%s'",tipoPlanta.getId(),tipoPlanta.getTipo()));
-            tipoPlantaModificadoConExito=true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return tipoPlantaModificadoConExito;
-    }
+//    public static boolean modificarTipoPlanta(TipoPlanta tipoPlanta){
+//        boolean tipoPlantaModificadoConExito=false;Statement consulta;
+//        try {
+//            consulta=conexion.createStatement();
+//            consulta.executeUpdate(String.format("UPDATE Tipo_Planta SET id=%d,tipo='%s'",tipoPlanta.getId(),tipoPlanta.getTipo()));
+//            tipoPlantaModificadoConExito=true;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return tipoPlantaModificadoConExito;
+//    }
 
     public static boolean insertarCliente(Cliente cliente){
         boolean clienteInsertadoConExito=false;Statement consulta;
@@ -191,17 +191,17 @@ public class DataAccess{
         }
         return usuarioInsertadoConExito;
     }
-    public static boolean insertarTipoPlanta(TipoPlanta tipoPlanta){
-        boolean usuarioInsertadoConExito=false;Statement consulta;
-        try {
-            consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("INSERT INTO Tipo_Planta VALUES (%d,'%s')",tipoPlanta.getId(),tipoPlanta.getTipo()));
-            usuarioInsertadoConExito=true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return usuarioInsertadoConExito;
-    }
+//    public static boolean insertarTipoPlanta(TipoPlanta tipoPlanta){
+//        boolean usuarioInsertadoConExito=false;Statement consulta;
+//        try {
+//            consulta=conexion.createStatement();
+//            consulta.executeUpdate(String.format("INSERT INTO Tipo_Planta VALUES (%d,'%s')",tipoPlanta.getId(),tipoPlanta.getTipo()));
+//            usuarioInsertadoConExito=true;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return usuarioInsertadoConExito;
+//    }
 
 
     public static boolean borrarProducto(int idProducto){
