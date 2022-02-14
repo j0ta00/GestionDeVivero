@@ -2,6 +2,7 @@ package main;
 
 import dataAccess.DataAccess;
 import entidades.Cliente;
+import entidades.Producto;
 import gestora.Gestora;
 import mensaje.Mensaje;
 import validaciones.DniValidator;
@@ -12,6 +13,7 @@ public class Main {
     private static Scanner teclado;
     private static  Gestora gestora;
     public static void main(String[] args) {
+        new Gestora().Instalador();
         teclado=new Scanner(System.in);
         gestora=new Gestora();
         DataAccess.incializarConexion();
@@ -41,40 +43,43 @@ public class Main {
             Mensaje.menuPrincipalVendedor();
             eleccion = teclado.nextInt();
         }while (eleccion !=1);
-            realizarVenta();
+        teclado.nextLine();
+        realizarVenta();
     }
 
     public static void realizarVenta(){
         String dniCliente;
         Cliente cliente;
         Mensaje.introducirDniCliente();
-        Mensaje.confirmarAnulacion();
+        Mensaje.mostrarOpcionAnular();
         dniCliente=teclado.nextLine();
-        if(new DniValidator(dniCliente).validar()){
-            if((cliente=DataAccess.consultarDatosDni(dniCliente))!=null){
+        if(!dniCliente.equals("0")) {
+            if (new DniValidator(dniCliente).validar()) {
+                if ((cliente = DataAccess.consultarDatosDni(dniCliente)) != null) {
                     gestora.setCliente(cliente);
-            }else{
-                Mensaje.dniNoEncontrado();
+                    introducirProducto();
+                } else {
+                    Mensaje.dniNoEncontrado();
+                }
+            }else {
+                Mensaje.dniInvalido();
             }
-
-        }else if(dniCliente.equals("0")){}else{
-            Mensaje.dniInvalido();
         }
     }
     public static void introducirProducto() {
-        int codigoProducto;
+        int codigoProducto=1;
         DataAccess.crearFactura(gestora.getCliente(),gestora.getUsuario());
-        Mensaje.introducirCodigoProducto();
-        Mensaje.confirmarAnulacion();
-        codigoProducto = teclado.nextInt();
-        if (DataAccess.insertarProductoEnPedido()) {
-            Mensaje.productoIntroducidoConExito();
-        }else if(codigoProducto==0){
-
-        }else{
-            Mensaje.productoNoEncontrado();
+        while(codigoProducto==0) {
+            Mensaje.introducirCodigoProducto();
+            Mensaje.confirmarAnulacion();
+            codigoProducto = teclado.nextInt();
+            if (DataAccess.insertarProductoEnPedido()) {
+                DataAccess.insertarProducto(new Producto(DataAccess. ))
+                Mensaje.productoIntroducidoConExito();
+            } else {
+                Mensaje.productoNoEncontrado();
+            }
         }
-
     }
 
 }

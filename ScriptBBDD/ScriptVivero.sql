@@ -25,7 +25,7 @@ CREATE TABLE Tipo_Plantas_Plantas(
                                    Codigo_Planta int NOT NULL,
                                    CONSTRAINT PK_Tipo_Planta PRIMARY KEY(Id_Tipo_Planta,Codigo_Planta),
                                    CONSTRAINT FK_Tipo_Planta FOREIGN KEY(Id_Tipo_Planta)REFERENCES Tipo_Plantas(Id),
-                                   CONSTRAINT FK_Codigo_Planta FOREIGN KEY(Codigo_Planta) REFERENCES Plantas(Codigo)
+                                   CONSTRAINT FK_Codigo_Planta FOREIGN KEY(Codigo_Planta) REFERENCES ProductosPlanta(Codigo)
 
 )
 

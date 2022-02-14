@@ -86,6 +86,11 @@ public static void modificarDatos(String datoAModificar){
      * <p><b>Postcondicion:</b> Ninguna</p>
      *
      * */
+    public static void mostrarOpcionAnular(){
+        System.out.println("0) Anular Venta");
+    }
+
+
     public static void confirmarVenta(){
         System.out.println("0) Anular venta");
     } /**
