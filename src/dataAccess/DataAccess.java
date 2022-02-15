@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Properties;
 
 public class DataAccess{
@@ -68,6 +69,23 @@ public class DataAccess{
         return esPlanta;
     }
 
+    public static Producto obtenerProducto(int codigoProducto) {
+        Producto producto=null;ResultSet resultado=null;
+        Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT * FROM Productos WHERE Codigo='%s'",codigoProducto));
+            if(resultado.next()){
+                producto=new Producto(resultado.getString("Descripcion"),resultado.getString("Codigo"),
+                        resultado.getInt("Unidades_Disponibles"),resultado.getDouble("Precio"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return producto;
+
+    }
+
 
 
     public static Cliente consultarDatosDni(String dniCliente) {
@@ -76,8 +94,8 @@ public class DataAccess{
             consulta=conexion.createStatement();
             resultado=consulta.executeQuery(String.format("SELECT * FROM Clientes WHERE Dni='%s'",dniCliente));
             if(resultado.next()){
-                cliente=new Cliente(resultado.getString("nombre"),resultado.getString("dni"),resultado.getString("direccion"),resultado.getString("codigoPostal"),
-                        resultado.getString("ciudad"),resultado.getString("telefono"),resultado.getString("correoElectronico"));
+                cliente=new Cliente(resultado.getString("Nombre"),resultado.getString("Dni"),resultado.getString("Direccion"),resultado.getString("Codigo_Postal"),
+                        resultado.getString("Ciudad"),resultado.getString("Telefono"),resultado.getString("Correo_Electronico"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,17 +104,20 @@ public class DataAccess{
 
     }
 
-    public static boolean crearFactura(Cliente cliente,Usuario usuario) {
-        boolean creadoConExito=false;LocalDate tiempo=LocalDate.now();
+    public static Factura crearFactura(Cliente cliente,Usuario usuario) {
+        boolean creadoConExito=false;LocalDate tiempo=LocalDate.now();Factura factura=null;ResultSet resultado=null;
         Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("INSERT INTO FACTURAS VALUES (%d,%d,'%s',%d)",cliente.getDni(),usuario.getId(),tiempo,0));
-            creadoConExito=true;
+            consulta.executeUpdate(String.format("INSERT INTO FACTURAS VALUES ('%s',%d,'%s',%d)",cliente.getDni(),usuario.getId(),tiempo,0));
+            resultado=consulta.executeQuery(String.format("SELECT MAX(Id) as Id FROM Facturas"));
+            if(resultado.next()) {
+                factura = new Factura(resultado.getInt("Id"),cliente.getDni(),usuario.getId(),tiempo,0);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return creadoConExito;
+        return factura;
     }
 
     public static boolean borrarFactura(){
@@ -115,7 +136,7 @@ public class DataAccess{
         boolean clienteModificadoConExito=false;Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("UPDATE CLIENTES SET  nombre='%s',dni=%d,direccion='%s', codigoPostal='%s', ciudad='%s', telefono='%s', coreoElectronico='%s'",cliente.getNombre(),cliente.getDni(),cliente.getDireccion()
+            consulta.executeUpdate(String.format("UPDATE CLIENTES SET  nombre='%s',dni=%d,direccion='%s', Codigo_Postal='%s', ciudad='%s', Telefono='%s', Coreo_Electronico='%s'",cliente.getNombre(),cliente.getDni(),cliente.getDireccion()
             ,cliente.getCodigoPostal(),cliente.getCiudad(),cliente.getTelefono(),cliente.getCorreoElectronico()));
             clienteModificadoConExito=true;
         } catch (SQLException e) {
@@ -138,7 +159,7 @@ public class DataAccess{
         boolean productoModificadoConExito=false;Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("UPDATE Productos SET descripcion='%s',codigo=%d,precioUnitario=%d,unidadesDisponibles=%d",producto.getDescripcion(),producto.getCodigo(),producto.getPrecioUnitario(),producto.getUnidadesDisponibles()));
+            consulta.executeUpdate(String.format("UPDATE Productos SET descripcion='%s',codigo=%d,precioUnitario=%d,unidades_Disponibles=%d",producto.getDescripcion(),producto.getCodigo(),producto.getPrecioUnitario(),producto.getUnidadesDisponibles()));
             productoModificadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -252,7 +273,7 @@ public class DataAccess{
         return tipoPlantaEliminadoConExito;
     }
 
-    public static boolean insertarProductoEnPedido() {//en procesos de hacerlo
+    public static boolean insertarProductoEnPedido(Factura factura,Producto producto) {//en procesos de hacerlo
         boolean insertadoConExito=false;
         Statement consulta;
         try {

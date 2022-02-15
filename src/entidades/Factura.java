@@ -3,14 +3,15 @@ package entidades;
 import java.time.LocalDate;
 
 public class Factura{
-private int id,dniCliente,Usuario;
+private int id,idUsuario;
+private String dniCliente;
 private LocalDate fecha;
 private double importe;
 
-    public Factura(int id, int dniCliente, int usuario, LocalDate fecha, double importe) {
+    public Factura(int id, String dniCliente, int idUsuario, LocalDate fecha, double importe) {
         this.id = id;
         this.dniCliente = dniCliente;
-        Usuario = usuario;
+        this.idUsuario = idUsuario;
         this.fecha = fecha;
         this.importe = importe;
     }
@@ -23,20 +24,20 @@ private double importe;
         this.id = id;
     }
 
-    public int getDniCliente() {
+    public String getDniCliente() {
         return dniCliente;
     }
 
-    public void setDniCliente(int dniCliente) {
+    public void setDniCliente(String dniCliente) {
         this.dniCliente = dniCliente;
     }
 
-    public int getUsuario() {
-        return Usuario;
+    public int getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setUsuario(int usuario) {
-        Usuario = usuario;
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public LocalDate getFecha() {

@@ -1,6 +1,7 @@
 package gestora;
 
 import entidades.Cliente;
+import entidades.Factura;
 import entidades.Usuario;
 import mensaje.Mensaje;
 
@@ -16,9 +17,18 @@ public class Gestora {
 
     private static String path = "ScriptBBDD/ScriptVivero.sql";
     private final static String PROPERTIESFILEPATH = "configuracion.properties";
+    private Factura factura;
     private Cliente cliente;
     private Usuario usuario;
     private static Connection miConexion;
+
+    public Factura getFactura() {
+        return factura;
+    }
+
+    public void setFactura(Factura factura) {
+        this.factura = factura;
+    }
 
     public Cliente getCliente() {
         return cliente;

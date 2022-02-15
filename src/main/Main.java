@@ -38,26 +38,29 @@ public class Main {
 
 
     public static void mostrarMenuVendedor(){
-        int eleccion;
-        do {
+        int eleccion=0;
+       while (eleccion !=2){
             Mensaje.menuPrincipalVendedor();
             eleccion = teclado.nextInt();
-        }while (eleccion !=1);
-        teclado.nextLine();
-        realizarVenta();
+            if(eleccion==1){
+                teclado.nextLine();
+                realizarVenta();
+            }
+        }
     }
 
     public static void realizarVenta(){
-        String dniCliente;
+        String dniCliente="";
         Cliente cliente;
-        Mensaje.introducirDniCliente();
-        Mensaje.mostrarOpcionAnular();
-        dniCliente=teclado.nextLine();
-        if(!dniCliente.equals("0")) {
+        while(!dniCliente.equals("0")) {
+            Mensaje.introducirDniCliente();
+            Mensaje.mostrarOpcionAnular();
+            dniCliente=teclado.nextLine();
             if (new DniValidator(dniCliente).validar()) {
                 if ((cliente = DataAccess.consultarDatosDni(dniCliente)) != null) {
                     gestora.setCliente(cliente);
                     introducirProducto();
+                    dniCliente="0";
                 } else {
                     Mensaje.dniNoEncontrado();
                 }
@@ -67,19 +70,19 @@ public class Main {
         }
     }
     public static void introducirProducto() {
-        int codigoProducto=1;
-        DataAccess.crearFactura(gestora.getCliente(),gestora.getUsuario());
-        while(codigoProducto==0) {
+        int codigoProducto=1;Producto producto=null;
+        gestora.setFactura(DataAccess.crearFactura(gestora.getCliente(),gestora.getUsuario()));
+        while(codigoProducto!=0) {
             Mensaje.introducirCodigoProducto();
-            Mensaje.confirmarAnulacion();
+            Mensaje.mostrarOpcionAnular();
             codigoProducto = teclado.nextInt();
-            if (DataAccess.insertarProductoEnPedido()) {
-                DataAccess.insertarProducto(new Producto(DataAccess. ))
+            if (codigoProducto!=0 && (producto=DataAccess.obtenerProducto(codigoProducto))!=null && DataAccess.insertarProductoEnPedido(gestora.getFactura(),producto)) {
                 Mensaje.productoIntroducidoConExito();
             } else {
                 Mensaje.productoNoEncontrado();
             }
         }
+        teclado.nextLine();
     }
 
 }
