@@ -2,7 +2,16 @@ package mensaje;
 
 public class Mensaje{
 
+    private final static String TELEFONO_INVALIDO="Teléfono inválido, introduce un teléfono español de 9 dígitos",TELEFONO_NO_ENCONTRADO="No hay ningún teléfono en la base de datos que corresponda con el introducido";
 
+
+    public static void imiprimirTelefonoInvalido(){
+        System.out.println(TELEFONO_INVALIDO);
+    }
+
+    public static void imprimirTelefonoNoEncontrado(){
+        System.out.println(TELEFONO_NO_ENCONTRADO);
+    }
 
 
     public static void preguntarInstalacion(){
@@ -12,9 +21,10 @@ public class Mensaje{
         System.out.println("2) No");
     }
 
-public static void modificarDatos(String datoAModificar){
-    System.out.println("Introduce el Id/Codigo/Dni del elemento que deseas modificar");
-}
+
+    public static void modificarDatos(String datoAModificar){
+        System.out.println("Introduce el Id/Codigo/Dni del elemento que deseas modificar");
+    }
 
 
 
@@ -48,7 +58,7 @@ public static void modificarDatos(String datoAModificar){
      *
      * */
     public static void introducirDniCliente(){
-        System.out.println("Introduce el Dni o Telefono del cliente");
+        System.out.println("Introduce el Dni o Telefono del cliente(recuerda debe ser un teléfono o Dni espñol válido)");
     }
 
     /**
@@ -107,6 +117,10 @@ public static void modificarDatos(String datoAModificar){
     public static void dniNoEncontrado(){
         System.out.println("El dni introducido no corresponde con el de ningún cliente existente en la base de datos");
 
+    }
+
+    public static void imprimirMensajeNoEncontradoGenerico(String elementoNoEncontrado){
+        System.out.println(String.format("%s no encontrado en la base de datos",elementoNoEncontrado));
     }
 
     public static void dniInvalido() {

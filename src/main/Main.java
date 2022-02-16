@@ -38,51 +38,65 @@ public class Main {
 
 
     public static void mostrarMenuVendedor(){
-        int eleccion=0;
-       while (eleccion !=2){
+        String eleccion="";
+        while (!eleccion.equals("2")){
             Mensaje.menuPrincipalVendedor();
-            eleccion = teclado.nextInt();
-            if(eleccion==1){
-                teclado.nextLine();
+            eleccion = teclado.nextLine();
+            if(eleccion.equals("1")){
                 realizarVenta();
             }
         }
     }
 
-    public static void realizarVenta(){
-        String dniCliente="";
+    public static void realizarVenta() {
+        String dniOTelefonoCliente = "";
         Cliente cliente;
-        while(!dniCliente.equals("0")) {
+        while (!dniOTelefonoCliente.equals("0")) {
             Mensaje.introducirDniCliente();
             Mensaje.mostrarOpcionAnular();
-            dniCliente=teclado.nextLine();
-            if (new DniValidator(dniCliente).validar()) {
-                if ((cliente = DataAccess.consultarDatosDni(dniCliente)) != null) {
-                    gestora.setCliente(cliente);
-                    introducirProducto();
-                    dniCliente="0";
+            dniOTelefonoCliente = teclado.nextLine();
+            if (dniOTelefonoCliente.matches(".*[a-zA-Z].*")){
+                if (new DniValidator(dniOTelefonoCliente).validar()) {
+                    intrducirTelefonoODni(dniOTelefonoCliente,true);
+                    dniOTelefonoCliente = "0";
                 } else {
-                    Mensaje.dniNoEncontrado();
+                    Mensaje.dniInvalido();
                 }
-            }else {
-                Mensaje.dniInvalido();
+            } else {
+                if (dniOTelefonoCliente.matches("[6|7|9][0-9]{8}$")){
+                    intrducirTelefonoODni(dniOTelefonoCliente,false);
+                    dniOTelefonoCliente = "0";
+                }else {
+                    Mensaje.imiprimirTelefonoInvalido();
+                }
             }
         }
     }
+
+    private static void intrducirTelefonoODni(String dniOTelefonoCliente,boolean esDni) {
+        Cliente cliente;
+        String mensaje=esDni?"dni":"telefono";
+        if ((cliente = DataAccess.consultarSiClienteExiste(dniOTelefonoCliente,mensaje.equals("dni"))) != null) {
+            gestora.setCliente(cliente);
+            introducirProducto();
+        } else {
+            Mensaje.imprimirMensajeNoEncontradoGenerico(mensaje);
+        }
+    }
+
     public static void introducirProducto() {
-        int codigoProducto=1;Producto producto=null;
+        String codigoProducto="";Producto producto=null;
         gestora.setFactura(DataAccess.crearFactura(gestora.getCliente(),gestora.getUsuario()));
-        while(codigoProducto!=0) {
+        while(!codigoProducto.equals("0")) {
             Mensaje.introducirCodigoProducto();
             Mensaje.mostrarOpcionAnular();
-            codigoProducto = teclado.nextInt();
-            if (codigoProducto!=0 && (producto=DataAccess.obtenerProducto(codigoProducto))!=null && DataAccess.insertarProductoEnPedido(gestora.getFactura(),producto)) {
+            codigoProducto = teclado.nextLine();
+            if (!codigoProducto.equals("0") && (producto=DataAccess.obtenerProducto(Integer.parseInt(codigoProducto)))!=null && DataAccess.insertarProductoEnPedido(gestora.getFactura(),producto)) {
                 Mensaje.productoIntroducidoConExito();
             } else {
                 Mensaje.productoNoEncontrado();
             }
         }
-        teclado.nextLine();
     }
 
 }

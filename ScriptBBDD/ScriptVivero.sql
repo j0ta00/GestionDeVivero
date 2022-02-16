@@ -101,3 +101,11 @@ UPDATE Factura SET Importe=(SELECT Precio_Unitario FROM Producto AS P INNER JOIN
 WHERE Id=(SELECT Id_Factura FROM inserted)
 END
 GO
+
+GO
+CREATE OR ALTER TRIGGER BorrarFactura ON Facturas
+	AFTER DELETE AS
+BEGIN
+DELETE FROM Productos_Facturas Where Id_Factura=(SELECT Id From deleted)
+END
+GO
