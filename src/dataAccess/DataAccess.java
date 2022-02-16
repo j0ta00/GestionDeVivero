@@ -88,11 +88,12 @@ public class DataAccess{
 
 
 
-    public static Cliente consultarDatosDni(String dniCliente) {
-        boolean dniEncontrado=false;Statement consulta;ResultSet resultado=null;Cliente cliente=null;
+    public static Cliente consultarSiClienteExiste(String dniOTelefonoCliente, boolean esDni) {
+        Statement consulta;ResultSet resultado=null;Cliente cliente=null;
+        String query=esDni?new StringBuilder("Dni=").append(String.format("'%s'",dniOTelefonoCliente)).toString():new StringBuilder("Telefono=").append(String.format("'%s'",dniOTelefonoCliente)).toString();
         try {
             consulta=conexion.createStatement();
-            resultado=consulta.executeQuery(String.format("SELECT * FROM Clientes WHERE Dni='%s'",dniCliente));
+            resultado=consulta.executeQuery(String.format("SELECT * FROM Clientes Where %s",query));
             if(resultado.next()){
                 cliente=new Cliente(resultado.getString("Nombre"),resultado.getString("Dni"),resultado.getString("Direccion"),resultado.getString("Codigo_Postal"),
                         resultado.getString("Ciudad"),resultado.getString("Telefono"),resultado.getString("Correo_Electronico"));
