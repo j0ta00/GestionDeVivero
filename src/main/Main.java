@@ -91,7 +91,10 @@ public class Main {
             Mensaje.introducirCodigoProducto();
             Mensaje.mostrarOpcionAnular();
             codigoProducto = teclado.nextLine();
-            if (!codigoProducto.equals("0") && (producto=DataAccess.obtenerProducto(Integer.parseInt(codigoProducto)))!=null && DataAccess.insertarProductoEnPedido(gestora.getFactura(),producto)) {
+            if (!codigoProducto.equals("0") && (producto=DataAccess.obtenerProducto(Integer.parseInt(codigoProducto)))!=null) {
+
+
+                DataAccess.insertarProductoEnPedido(gestora.getFactura(),producto)
                 Mensaje.productoIntroducidoConExito();
             } else {
                 Mensaje.productoNoEncontrado();

@@ -77,7 +77,7 @@ public class DataAccess{
             resultado=consulta.executeQuery(String.format("SELECT * FROM Productos WHERE Codigo='%s'",codigoProducto));
             if(resultado.next()){
                 producto=new Producto(resultado.getString("Descripcion"),resultado.getString("Codigo"),
-                        resultado.getInt("Unidades_Disponibles"),resultado.getDouble("Precio"));
+                        resultado.getInt("Unidades_Disponibles"),resultado.getDouble("Precio_Unitario"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -274,12 +274,12 @@ public class DataAccess{
         return tipoPlantaEliminadoConExito;
     }
 
-    public static boolean insertarProductoEnPedido(Factura factura,Producto producto) {//en procesos de hacerlo
+    public static boolean insertarProductoEnPedido(Factura factura,Producto producto,int cantidadProducto) {//en procesos de hacerlo
         boolean insertadoConExito=false;
         Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("INSERT INTO PRODUCTOS_FACTURAS"));
+            consulta.executeUpdate(String.format("INSERT INTO PRODUCTOS_FACTURAS VALUES(%d,%d,%)",factura.getId(),cantidadProducto,producto.getCodigo()));
             insertadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();
