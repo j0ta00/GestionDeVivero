@@ -92,20 +92,36 @@ CREATE TABLE Productos_Facturas(
 
 
 
-
     GO
-CREATE OR ALTER TRIGGER ImporteFactura ON Productos_Facturas
-	AFTER INSERT AS
+CREATE OR ALTER PROCEDURE BorrarFactura
+    @idFacturaABorrar int
+    AS
 BEGIN
-UPDATE Factura SET Importe=(SELECT Precio_Unitario FROM Producto AS P INNER JOIN inserted AS I ON P.Codigo=I.Codigo_Producto)*(SELECT Cantidad FROM inserted)
-WHERE Id=(SELECT Id_Factura FROM inserted)
+DELETE FROM Productos_Facturas Where Id_Factura=@idFacturaABorrar
+DELETE FROM Facturas Where Id=@idFacturaABorrar
 END
 GO
 
+
 GO
-CREATE OR ALTER TRIGGER BorrarFactura ON Facturas
+CREATE OR ALTER TRIGGER BorradoProductoFactura ON Productos_Facturas
 	AFTER DELETE AS
 BEGIN
-DELETE FROM Productos_Facturas Where Id_Factura=(SELECT Id From deleted)
+UPDATE Productos SET
+    Unidades_Disponibles+=(SELECT Cantidad FROM deleted Where Codigo_Producto=Codigo) WHERE Codigo=(SELECT Codigo_Producto FROM deleted Where Codigo_Producto=Codigo)
+
+END
+GO
+
+
+GO
+CREATE OR ALTER TRIGGER ImporteFactura ON Productos_Facturas
+	AFTER INSERT AS
+BEGIN
+UPDATE Facturas SET
+    Importe+=(SELECT I.Cantidad*P.Precio_Unitario FROM inserted AS I INNER JOIN Productos AS P ON I.Codigo_Producto=P.Codigo)
+WHERE Id=(SELECT Id_Factura FROM inserted)
+UPDATE Productos SET Unidades_Disponibles-=(SELECT Cantidad  FROM inserted) WHERE Codigo=(SELECT Codigo_Producto FROM inserted)
+
 END
 GO

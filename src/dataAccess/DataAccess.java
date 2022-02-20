@@ -76,7 +76,7 @@ public class DataAccess{
             consulta=conexion.createStatement();
             resultado=consulta.executeQuery(String.format("SELECT * FROM Productos WHERE Codigo='%s'",codigoProducto));
             if(resultado.next()){
-                producto=new Producto(resultado.getString("Descripcion"),resultado.getString("Codigo"),
+                producto=new Producto(resultado.getString("Descripcion"),resultado.getInt("Codigo"),
                         resultado.getInt("Unidades_Disponibles"),resultado.getDouble("Precio_Unitario"));
             }
         } catch (SQLException e) {
@@ -121,24 +121,13 @@ public class DataAccess{
         return factura;
     }
 
-    public static boolean borrarFactura(){
-        boolean facturaBorradaConExito=false;Statement consulta;
-        try {
-            consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("DELETE FROM FACTURAS WHERE Id=(SELECT MAX(Id) FROM FACTURAS)"));
-            facturaBorradaConExito=true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return facturaBorradaConExito;
-    }
 
     public static boolean modificarCliente(Cliente cliente){
         boolean clienteModificadoConExito=false;Statement consulta;
         try {
             consulta=conexion.createStatement();
             consulta.executeUpdate(String.format("UPDATE CLIENTES SET  nombre='%s',dni=%d,direccion='%s', Codigo_Postal='%s', ciudad='%s', Telefono='%s', Coreo_Electronico='%s'",cliente.getNombre(),cliente.getDni(),cliente.getDireccion()
-            ,cliente.getCodigoPostal(),cliente.getCiudad(),cliente.getTelefono(),cliente.getCorreoElectronico()));
+                    ,cliente.getCodigoPostal(),cliente.getCiudad(),cliente.getTelefono(),cliente.getCorreoElectronico()));
             clienteModificadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -274,16 +263,74 @@ public class DataAccess{
         return tipoPlantaEliminadoConExito;
     }
 
+    public static boolean comprobarCantidadDeProducto(int idProducto,int cantidadDeProducto){
+        boolean esSuficiente=false;ResultSet resultado=null;
+        Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT Unidades_Disponibles FROM Productos WHERE Codigo=%d",idProducto));
+            if(resultado.next() && resultado.getInt("Unidades_Disponibles")>=cantidadDeProducto){
+                esSuficiente=true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return esSuficiente;
+    }
+
+    public static boolean comprobarSiProductoYaExisteEnFactura(int idProducto,int idFactura){
+        boolean existe=false;
+        Statement consulta;
+        ResultSet resultado=null;
+        try {
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT Codigo_Producto FROM Productos_Facturas WHERE Codigo_Producto=%d AND Id_Factura=%d",idProducto,idFactura));
+            if(resultado.next()){
+                existe=true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return existe;
+    }
+
+
+    public static boolean actualizarProductoEnPedido(int cantidad,int idFactura,int idProduto){
+        boolean actualizadoConExito=false;
+        Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(String.format("UPDATE PRODUCTOS_FACTURAS SET Cantidad=%d Where Codigo_Producto=%d AND Id_Factura=%d",cantidad,idProduto,idFactura));
+            actualizadoConExito=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return actualizadoConExito;
+    }
+
+
     public static boolean insertarProductoEnPedido(Factura factura,Producto producto,int cantidadProducto) {//en procesos de hacerlo
         boolean insertadoConExito=false;
         Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("INSERT INTO PRODUCTOS_FACTURAS VALUES(%d,%d,%)",factura.getId(),cantidadProducto,producto.getCodigo()));
+            consulta.executeUpdate(String.format("INSERT INTO PRODUCTOS_FACTURAS VALUES(%d,%d,%d)",factura.getId(),cantidadProducto,producto.getCodigo()));
             insertadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return  insertadoConExito;
+    }
+
+    public static void borrarFactura(Factura factura){
+        CallableStatement callStmt=null;
+        try {
+            callStmt=conexion.prepareCall("{CALL BorrarFactura(?)}");
+            callStmt.setInt(1,factura.getId());
+            callStmt.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 }

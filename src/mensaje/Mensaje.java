@@ -2,8 +2,16 @@ package mensaje;
 
 public class Mensaje{
 
-    private final static String CANTIDAD_PRODUCTO="Introduce la cantidad de producto que deseas vender", TELEFONO_INVALIDO="Teléfono inválido, introduce un teléfono español de 9 dígitos",TELEFONO_NO_ENCONTRADO="No hay ningún teléfono en la base de datos que corresponda con el introducido";
+    private final static String CANTIDAD_DE_PRODUCTO_INVALIDA="No queda esa cantidad de productos disponibles", OPCION_FINALIZAR="1) Finalizar Factura", CANTIDAD_PRODUCTO="Introduce la cantidad de producto que deseas vender", TELEFONO_INVALIDO="Teléfono inválido, introduce un teléfono español de 9 dígitos",TELEFONO_NO_ENCONTRADO="No hay ningún teléfono en la base de datos que corresponda con el introducido";
 
+
+    public static void imprimirCantidadDeProductoInvalida(){
+        System.out.println(CANTIDAD_DE_PRODUCTO_INVALIDA);
+    }
+
+    public static void imprimirFinalizarFactura(){
+        System.out.println(OPCION_FINALIZAR);
+    }
 
     public static void imiprimirTelefonoInvalido(){
         System.out.println(TELEFONO_INVALIDO);
@@ -109,6 +117,21 @@ public class Mensaje{
      * <p><b>Postcondicion:</b> Ninguna</p>
      *
      * */
+    public static void imprimirGuardarOAnular(){
+        System.out.println("""
+                ¿Desea guardar o anular la venta?
+                1) Anular
+                2) Guardar""");
+    }
+
+    public static void retrocederHaciaOpcionAnterior(){
+        System.out.println("0)Retroceder a introducir el id del producto");
+    }
+
+    public static void salirDeLaVenta(){
+        System.out.println("0)Finalizar o Anular la venta");
+    }
+
     public static void confirmarAnulacion(){
         System.out.println("¿Estás seguro de que deseas anular la venta?");
     }
