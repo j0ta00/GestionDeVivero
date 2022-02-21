@@ -1,5 +1,6 @@
 package main;
 
+import com.microsoft.sqlserver.jdbc.StringUtils;
 import dataAccess.DataAccess;
 import entidades.Cliente;
 import entidades.Producto;
@@ -32,9 +33,212 @@ public class Main {
             contraseña=teclado.nextLine();
             gestora.setUsuario(DataAccess.consultarDatosLogin(usuario,contraseña));
         }while(gestora.getUsuario()==null);
-        mostrarMenuVendedor();
+        if(!gestora.getUsuario().isEsGestor()) {
+            mostrarMenuVendedor();
+        }else{
+            mostrarMenuGestor();
+        }
+    }
+    public static void mostrarMenuGestor(){
+        String eleccion="";
+        while (!eleccion.equals("5")){
+            Mensaje.menuPrincipalVendedor();
+            eleccion = teclado.nextLine();
+            realizarOpcionElegida(eleccion);
+        }
     }
 
+    public static void realizarOpcionElegida(String eleccion){
+        switch(eleccion){
+            case "1"->{
+                realizarInserciones();
+            }
+        }
+    }
+
+    public static void realizarInserciones(){
+        String eleccion="";
+        while(!eleccion.equals("0")){
+            Mensaje.menuPrincipalInsercion();
+            eleccion=teclado.nextLine();
+            realizarInsercionElegida(eleccion);
+        }
+    }
+    public static void realizarInsercionElegida(String eleccion){
+        switch(eleccion) {
+            case "1" -> {
+                realizarInsercionCliente();
+            }
+            case "2"->{
+                realizarInsercionProducto();
+            }
+        }
+    }
+
+    public static void realizarInsercionProducto(){
+        String tipoProducto="";
+        while (!tipoProducto.equals("1") && !tipoProducto.equals("2")) {
+                    Mensaje.imprimirMenuTipoProducto();
+                    tipoProducto=teclado.nextLine();
+            }
+        DataAccess.insertarProducto(new Producto(pedirDescripcion(),0,Integer.parseInt(pedirUnidadesDisponibles()),pedirPrecioUnitario()));
+        if(tipoProducto.equals("1")){
+            DataAccess.inse
+        }else{
+
+        }
+    }
+    private static String pedirUnidadesDisponibles() {
+        String unidadesDisponibles="";
+        while(unidadesDisponibles.length()<1 || unidadesDisponibles.length()>8 || unidadesDisponibles.matches(".*[a-zA-Z].*")){
+            Mensaje.preguntarDescripcion();
+            unidadesDisponibles = teclado.nextLine();
+            if(unidadesDisponibles.length()<1 || unidadesDisponibles.length()>8 || unidadesDisponibles.matches(".*[a-zA-Z].*")){
+                Mensaje.errorGenericoLongituDato(8,0);
+            }
+        }
+        return unidadesDisponibles;
+    }
+    private static String pedirUsuario() {
+        String usuario="";
+        while(usuario.length()<1 || usuario.length()>25){
+            Mensaje.preguntarUsuario();
+            usuario =teclado.nextLine();
+            if(usuario.length()<1 || usuario.length()>25){
+                Mensaje.errorGenericoLongituDato(25,0);
+            }
+        }
+        return usuario;
+    }
+    private static String pedirContrasenhia() {
+        String contrasenhia="";
+        while(contrasenhia.length()<6 || contrasenhia.length()>25 || contrasenhia.matches("^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$")){
+            Mensaje.preguntarContrasenhia();
+            contrasenhia =teclado.nextLine();
+            if(contrasenhia.length()<6 || contrasenhia.length()>25 || contrasenhia.matches("^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$") ){
+                Mensaje.imprimirErrorContrasenhiaInvalida();
+            }
+        }
+        return contrasenhia;
+    }
+
+    private static String pedirDescripcion() {
+        String descripcion="";
+        while(descripcion.length()<1 || descripcion.length()>40 ){
+            Mensaje.preguntarDescripcion();
+            descripcion =teclado.nextLine();
+            if(descripcion.length()<1 || descripcion.length()>40){
+                Mensaje.errorGenericoLongituDato(40,0);
+            }
+        }
+        return descripcion;
+    }
+    private static Double pedirPrecioUnitario() {
+        String precio="";double precioEnDouble=0;
+        boolean valido=false;
+        while(!valido){
+            Mensaje.preguntarDescripcion();
+            try {
+                precioEnDouble=Double.parseDouble(precio);
+                valido=true;
+            }
+            catch(NumberFormatException e)
+            {
+                Mensaje.imprimirMenuPrecioInvalido();
+            }
+        }
+        return precioEnDouble;
+    }
+
+
+
+    public static void realizarInsercionProductoJardineria(){
+
+
+    }
+
+    public static void realizarInsercionCliente(){
+        DataAccess.insertarCliente(new Cliente(pedirNombre(),pedirDni(),pedirDireccion(),pedirCodigoPostal(),pedirCiudad(),
+                pedirTelefono(),pedirCorreo()));
+    }
+    private static String pedirCiudad() {
+        String ciudad="";
+        while(ciudad.length()<1 || ciudad.length()>29 ){
+            Mensaje.preguntarNombreCliente();
+            ciudad =teclado.nextLine();
+            if(ciudad.length()<1 || ciudad.length()>29){
+                Mensaje.errorGenericoLongituDato(29,0);
+            }
+        }
+        return ciudad;
+    }
+    private static String pedirTelefono() {
+        String telefono="";
+        while(telefono.matches("[6|7|9][0-9]{8}$")){
+            Mensaje.preguntarNombreCliente();
+            telefono = teclado.nextLine();
+            if(telefono.matches("[6|7|9][0-9]{8}$")){
+                Mensaje.imiprimirTelefonoInvalido();
+            }
+        }
+        return telefono;
+    }
+    private static String pedirCorreo() {
+        String correo="";
+        while(correo.length()<1 || correo.length()>20){
+            Mensaje.preguntarCorreo();
+            correo = teclado.nextLine();
+            if(correo.length()<1 || correo.length()>20){
+                Mensaje.imiprimirTelefonoInvalido();
+            }
+        }
+        return  correo;
+    }
+    private static String pedirNombre() {
+        String nombre="";
+        while(nombre.length()<1 || nombre.length()>29 ){
+            Mensaje.preguntarNombreCliente();
+            nombre =teclado.nextLine();
+            if(nombre.length()<1 || nombre.length()>29){
+                Mensaje.imprimirErrorEnLaLongitudDelNombre();
+            }
+        }
+        return nombre;
+    }
+
+    private static String pedirDni() {
+        String dni="";
+        while(dni.matches("[6|7|9][0-9]{8}$")){
+            Mensaje.preguntarDni();
+            dni=teclado.nextLine();
+            if(dni.matches("[6|7|9][0-9]{8}$")){
+                Mensaje.dniInvalido();
+            }
+        }
+        return dni;
+    }
+    private static String pedirCodigoPostal() {
+        String codigoPostal="";
+        while(codigoPostal.matches("/^(?:0[1-9]|[1-4]\\d|5[0-2])\\d{3}$/")){
+            Mensaje.preguntarCodigoPostal();
+            codigoPostal=teclado.nextLine();
+            if(codigoPostal.matches("/^(?:0[1-9]|[1-4]\\d|5[0-2])\\d{3}$/")){
+                Mensaje.errorCodigoPostalInvalido();
+            }
+        }
+        return codigoPostal;
+    }
+    private static String pedirDireccion() {
+        String direccion="";
+        while(direccion.length()<1 || direccion.length()>50){
+            Mensaje.preguntarDireccion();
+            direccion=teclado.nextLine();
+            if(direccion.length()<1 || direccion.length()>50){
+                Mensaje.errorGenericoLongituDato(50,0);
+            }
+        }
+        return direccion;
+    }
 
 
     public static void mostrarMenuVendedor(){

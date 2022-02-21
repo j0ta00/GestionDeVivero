@@ -2,9 +2,104 @@ package mensaje;
 
 public class Mensaje{
 
-    private final static String CANTIDAD_DE_PRODUCTO_INVALIDA="No queda esa cantidad de productos disponibles", OPCION_FINALIZAR="1) Finalizar Factura", CANTIDAD_PRODUCTO="Introduce la cantidad de producto que deseas vender", TELEFONO_INVALIDO="Teléfono inválido, introduce un teléfono español de 9 dígitos",TELEFONO_NO_ENCONTRADO="No hay ningún teléfono en la base de datos que corresponda con el introducido";
+    private final static String
+    CONTRASENHIA_INVALIDA="contrasenhia inválida, la longitud debe ser mayor de 6 y contener numeros y letras",
+    PRECIO_INVALIDO="Introduce un precio adecuado para el tipo de producto,recuerda que no puede tener más de 2 decimales, ni más de 6 cifras",
+            MENU_TIPO_PRODUCTO= """
+            ¿De qué será el producto?
+            1) Jardinería
+            2) Planta
+            """,CODIGO_POSTAL_INVALIDO="Introduce un código postal español válido",ERROR_LONGITUD_DATO="El dato introducido tiene una longitud inválida, el rango sería -> la máxima longitud: %d y la minima: %d",ERROR_LONGITUD_NOMBRE="El usuario no puede tener un nombre cuya longitud sea menor a 1 carácter, ni podrá ser superior a 30",
+    CORREO="Introduce el correo del cliente:", UNIDADES_DISPONIBLES="Introduce las unidades que estarán disponibles del producto:",DESCRIPCION="Introduce la descripción del producto:",PRECIO="Introduce el precio que quieres que tenga el producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras:",
+    TELEFONO="Introduce el teléfono del cliente(recuerda que debe ser uno español para que sea válido):",TIPO_PLANTA="Introduce el tipo de planta que quieres añadir",ID_TIPO_PLANTA="Introduce el id del tipo planta que tiene la planta:",
+    CIUDAD="Introduce la ciudad en la que vive el cliente:",CODIGO_POSTAL="Introduce el codigo postal que deseas que tenga el cliente",DIRECCION="Introduce la dirección que deseas que tenga el cliente:",ES_GESTOR="Introduce 0 si quieres que sea vendedor y 1 si quieres que sea gestor",USUARIO="Introduce el nombre de usuario que tendrá dicho usuario:",CONTRASENHIA="Introduce la contraseña que tendrá el usuario,la longitud debe ser mayor de 6 y contener numeros y letras:",
+            DNI="Introduce el dni que deseas que tenga el cliente(recuerda que debe ser uno español para que sea válido):",NOMBRE_CLIENTE="Introduce el nombre que deseas que tenga el cliente:",CANTIDAD_DE_PRODUCTO_INVALIDA="No queda esa cantidad de productos disponibles", OPCION_FINALIZAR="1) Finalizar Factura", CANTIDAD_PRODUCTO="Introduce la cantidad de producto que deseas vender", TELEFONO_INVALIDO="Teléfono inválido, introduce un teléfono español de 9 dígitos",TELEFONO_NO_ENCONTRADO="No hay ningún teléfono en la base de datos que corresponda con el introducido";
 
 
+    public static void imprimirErrorContrasenhiaInvalida(){
+        System.out.println(CONTRASENHIA_INVALIDA);
+    }
+
+    public static void imprimirMenuPrecioInvalido(){
+        System.out.println(PRECIO_INVALIDO);
+    }
+
+    public static void imprimirMenuTipoProducto(){
+        System.out.println(MENU_TIPO_PRODUCTO);
+    }
+
+    public static void errorCodigoPostalInvalido(){
+        System.out.println(CODIGO_POSTAL_INVALIDO);
+    }
+
+    public static void errorGenericoLongituDato(int max,int min){
+        System.out.println(String.format(ERROR_LONGITUD_DATO,max,min));
+    }
+
+    public static void preguntarContrasenhia(){
+        System.out.println(CONTRASENHIA);
+    }
+
+    public static void imprimirErrorEnLaLongitudDelNombre(){
+        System.out.println(ERROR_LONGITUD_NOMBRE);
+    }
+
+    public static void preguntarUsuario(){
+        System.out.println(USUARIO);
+    }
+
+
+    public static void preguntarSiEsGestor(){
+        System.out.println(ES_GESTOR);
+    }
+
+    public static void preguntarIdTipoPlanta(){
+        System.out.println(ID_TIPO_PLANTA);
+    }
+
+    public static void preguntarTipoPlanta(){
+        System.out.println(TIPO_PLANTA);
+    }
+
+    public static void preguntarUnidadesDisponibles(){
+        System.out.println(UNIDADES_DISPONIBLES);
+
+    }
+
+    public static void preguntarDescripcion(){
+        System.out.println(DESCRIPCION);
+    }
+
+    public static void preguntarPrecio(){
+        System.out.println(PRECIO);
+    }
+
+    public static void preguntarCorreo(){
+        System.out.println(CORREO);
+    }
+
+    public static void preguntarTelefono(){
+        System.out.println(TELEFONO);
+    }
+
+    public static void preguntarCiudad(){
+        System.out.println(CIUDAD);
+    }
+
+    public static void preguntarCodigoPostal(){
+        System.out.println(CODIGO_POSTAL);
+    }
+
+    public static void preguntarNombreCliente(){
+        System.out.println(NOMBRE_CLIENTE);
+    }
+    public static void preguntarDni(){
+        System.out.println(DNI);
+    }
+
+    public static void preguntarDireccion(){
+        System.out.println(DIRECCION);
+    }
     public static void imprimirCantidadDeProductoInvalida(){
         System.out.println(CANTIDAD_DE_PRODUCTO_INVALIDA);
     }
@@ -123,6 +218,32 @@ public class Mensaje{
                 1) Anular
                 2) Guardar""");
     }
+
+    public static void menuPrincipalGestor(){
+        System.out.println("""
+                0) Finalizar sesión
+                1) Insertar algún elemento
+                2) Modificar algún elemento
+                3) Eliminar algún elemento
+                4) Opciones Adicionales
+                """);
+
+    }
+    public static void menuPrincipalInsercion(){
+        System.out.println("""
+                0) Retroceder
+                1) Insertar Cliente
+                2) Insertar Producto
+                3) Insertar tipo planta
+                4) Insertar Usuario
+                """);
+
+    }
+
+
+
+
+
 
     public static void retrocederHaciaOpcionAnterior(){
         System.out.println("0)Retroceder a introducir el id del producto");
