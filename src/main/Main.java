@@ -4,10 +4,13 @@ import com.microsoft.sqlserver.jdbc.StringUtils;
 import dataAccess.DataAccess;
 import entidades.Cliente;
 import entidades.Producto;
+import entidades.Tipo_Planta;
 import gestora.Gestora;
 import mensaje.Mensaje;
 import validaciones.DniValidator;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -41,8 +44,8 @@ public class Main {
     }
     public static void mostrarMenuGestor(){
         String eleccion="";
-        while (!eleccion.equals("5")){
-            Mensaje.menuPrincipalVendedor();
+        while (!eleccion.equals("0")){
+            Mensaje.menuPrincipalGestor();
             eleccion = teclado.nextLine();
             realizarOpcionElegida(eleccion);
         }
@@ -76,25 +79,46 @@ public class Main {
     }
 
     public static void realizarInsercionProducto(){
-        String tipoProducto="";
+        String tipoProducto="";Producto producto;
         while (!tipoProducto.equals("1") && !tipoProducto.equals("2")) {
                     Mensaje.imprimirMenuTipoProducto();
                     tipoProducto=teclado.nextLine();
             }
-        DataAccess.insertarProducto(new Producto(pedirDescripcion(),0,Integer.parseInt(pedirUnidadesDisponibles()),pedirPrecioUnitario()));
+        DataAccess.insertarProducto((producto=new Producto(pedirDescripcion(),0,Integer.parseInt(pedirUnidadesDisponibles()),pedirPrecioUnitario())));
         if(tipoProducto.equals("1")){
-            DataAccess.inse
+            DataAccess.insertarProductoPlantaOJardineria(null);
         }else{
-
+            DataAccess.insertarProductoPlantaOJardineria(pedirTipoPlantas());
         }
     }
+    public static List<Tipo_Planta> pedirTipoPlantas(){
+        List<Tipo_Planta> listaTipoPlanta=new LinkedList<Tipo_Planta>();String idTipoPlanta="";Tipo_Planta tipo_planta;
+        while(!idTipoPlanta.equals("0") ||  0==listaTipoPlanta.size()){
+            Mensaje.preguntarIdTipoPlanta();
+            if(listaTipoPlanta.size()>0){
+                Mensaje.retrocederHaciaOpcionAnterior();
+            }
+            idTipoPlanta=teclado.nextLine();
+            if(!idTipoPlanta.equals("0") && !idTipoPlanta.matches(".*[\\D].*") && (tipo_planta=DataAccess.obtenerTipoPlanta(Integer.parseInt(idTipoPlanta)))!=null){
+                listaTipoPlanta.add(tipo_planta);
+                Mensaje.imprimirTipoPlantaExito();
+            }else if(!idTipoPlanta.equals("0")){
+                Mensaje.imprimirErrorTipoPlantaNoEncontrado();
+            }
+        }
+        return listaTipoPlanta;
+    }
+
     private static String pedirUnidadesDisponibles() {
         String unidadesDisponibles="";
-        while(unidadesDisponibles.length()<1 || unidadesDisponibles.length()>8 || unidadesDisponibles.matches(".*[a-zA-Z].*")){
-            Mensaje.preguntarDescripcion();
+        while(unidadesDisponibles.length()<1 || unidadesDisponibles.length()>8 || unidadesDisponibles.matches(".*[\\D].*")){
+            Mensaje.preguntarUnidadesDisponibles();
             unidadesDisponibles = teclado.nextLine();
-            if(unidadesDisponibles.length()<1 || unidadesDisponibles.length()>8 || unidadesDisponibles.matches(".*[a-zA-Z].*")){
+            if(unidadesDisponibles.length()<1 || unidadesDisponibles.length()>8){
                 Mensaje.errorGenericoLongituDato(8,0);
+            }
+            if(unidadesDisponibles.matches(".*[\\D].*")){
+                Mensaje.imprimirErrorCaracteresNumericos();
             }
         }
         return unidadesDisponibles;
@@ -137,7 +161,8 @@ public class Main {
         String precio="";double precioEnDouble=0;
         boolean valido=false;
         while(!valido){
-            Mensaje.preguntarDescripcion();
+            Mensaje.preguntarPrecio();
+            precio=teclado.nextLine();
             try {
                 precioEnDouble=Double.parseDouble(precio);
                 valido=true;
@@ -151,20 +176,18 @@ public class Main {
     }
 
 
-
-    public static void realizarInsercionProductoJardineria(){
-
-
-    }
-
     public static void realizarInsercionCliente(){
-        DataAccess.insertarCliente(new Cliente(pedirNombre(),pedirDni(),pedirDireccion(),pedirCodigoPostal(),pedirCiudad(),
-                pedirTelefono(),pedirCorreo()));
+       if(!DataAccess.insertarCliente(new Cliente(pedirNombre(),pedirDni(),pedirDireccion(),pedirCodigoPostal(),pedirCiudad(),
+                pedirTelefono(),pedirCorreo()))){
+            Mensaje.imprimirErroClienteNoInsertado();
+       }else{
+           Mensaje.imprimirClienteInsertadoConExito();
+       }
     }
     private static String pedirCiudad() {
         String ciudad="";
         while(ciudad.length()<1 || ciudad.length()>29 ){
-            Mensaje.preguntarNombreCliente();
+            Mensaje.preguntarCiudad();
             ciudad =teclado.nextLine();
             if(ciudad.length()<1 || ciudad.length()>29){
                 Mensaje.errorGenericoLongituDato(29,0);
@@ -174,10 +197,10 @@ public class Main {
     }
     private static String pedirTelefono() {
         String telefono="";
-        while(telefono.matches("[6|7|9][0-9]{8}$")){
-            Mensaje.preguntarNombreCliente();
+        while(!telefono.matches("[6|7|9][0-9]{8}$")){
+            Mensaje.preguntarTelefono();
             telefono = teclado.nextLine();
-            if(telefono.matches("[6|7|9][0-9]{8}$")){
+            if(!telefono.matches("[6|7|9][0-9]{8}$")){
                 Mensaje.imiprimirTelefonoInvalido();
             }
         }
@@ -208,10 +231,10 @@ public class Main {
 
     private static String pedirDni() {
         String dni="";
-        while(dni.matches("[6|7|9][0-9]{8}$")){
+        while(!new DniValidator(dni).validar()){
             Mensaje.preguntarDni();
             dni=teclado.nextLine();
-            if(dni.matches("[6|7|9][0-9]{8}$")){
+            if(!new DniValidator(dni).validar()){
                 Mensaje.dniInvalido();
             }
         }
@@ -219,10 +242,10 @@ public class Main {
     }
     private static String pedirCodigoPostal() {
         String codigoPostal="";
-        while(codigoPostal.matches("/^(?:0[1-9]|[1-4]\\d|5[0-2])\\d{3}$/")){
+        while(!codigoPostal.matches("^(?:0[1-9]|[1-4]\\d|5[0-2])\\d{3}$")){
             Mensaje.preguntarCodigoPostal();
             codigoPostal=teclado.nextLine();
-            if(codigoPostal.matches("/^(?:0[1-9]|[1-4]\\d|5[0-2])\\d{3}$/")){
+            if(!codigoPostal.matches("^(?:0[1-9]|[1-4]\\d|5[0-2])\\d{3}$")){
                 Mensaje.errorCodigoPostalInvalido();
             }
         }
@@ -260,7 +283,7 @@ public class Main {
             Mensaje.mostrarOpcionAnular();
             dniOTelefonoCliente = teclado.nextLine();
             if (!dniOTelefonoCliente.equals("0")){
-                if (dniOTelefonoCliente.matches(".*[a-zA-Z].*")) {
+                if (dniOTelefonoCliente.matches(".*[\\D].*")) {
                     if (new DniValidator(dniOTelefonoCliente).validar()) {
                         intrducirTelefonoODni(dniOTelefonoCliente, true);
                         dniOTelefonoCliente = "0";

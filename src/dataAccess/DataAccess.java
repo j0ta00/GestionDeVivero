@@ -1,9 +1,6 @@
 package dataAccess;
 
-import entidades.Cliente;
-import entidades.Factura;
-import entidades.Producto;
-import entidades.Usuario;
+import entidades.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,6 +9,7 @@ import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Properties;
 
 public class DataAccess{
@@ -172,12 +170,10 @@ public class DataAccess{
         boolean clienteInsertadoConExito=false;Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("INSERT INTO CLIENTES VALUES ('%s',%d,'%s','%s','%s','%s','%s')", cliente.getDni(),cliente.getNombre(),cliente.getDireccion()
+            consulta.executeUpdate(String.format("INSERT INTO CLIENTES VALUES ('%s','%s','%s','%s','%s','%s','%s')",cliente.getNombre(),cliente.getDni(),cliente.getDireccion()
                     ,cliente.getCodigoPostal(),cliente.getCiudad(),cliente.getTelefono(),cliente.getCorreoElectronico()));
             clienteInsertadoConExito=true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) {}
         return clienteInsertadoConExito;
     }
     public static boolean insertarUsuario(Usuario usuario){
@@ -192,15 +188,47 @@ public class DataAccess{
         return usuarioInsertadoConExito;
     }
     public static boolean insertarProducto(Producto producto){
-        boolean usuarioInsertadoConExito=false;Statement consulta;
+        boolean productoInsertadoConExito=false;Statement consulta;String precioUnitario="";
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("INSERT INTO Productos VALUES ('%s',%d,%d,%d)",producto.getDescripcion(),producto.getCodigo(),producto.getPrecioUnitario(),producto.getUnidadesDisponibles()));
-            usuarioInsertadoConExito=true;
+            consulta.executeUpdate(String.format("INSERT INTO Productos(Descripcion,Precio_Unitario,Unidades_Disponibles) VALUES ('%s',%s,%d)",producto.getDescripcion(),String.valueOf(producto.getPrecioUnitario()).replace(',','.'),producto.getUnidadesDisponibles()));
+            productoInsertadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return usuarioInsertadoConExito;
+        return productoInsertadoConExito;
+    }
+    public static void insertarProductoPlantaOJardineria(List<Tipo_Planta> listaTipoPlantas){
+        Statement consulta;String query="";
+        try {
+            if(listaTipoPlantas==null) {
+                query=new StringBuilder("INSERT INTO ProductosJardineria values").append("(").append("(SELECT MAX(Codigo) FROM Productos)").append(")").toString();
+            }else{
+                query=new StringBuilder("INSERT INTO ProductosPlanta values").append("(").append("(SELECT MAX(Codigo) FROM Productos)").append(")").toString();
+            }
+            consulta=conexion.createStatement();
+            consulta.executeUpdate(query);
+            if(listaTipoPlantas!=null) {
+                insertarTiposDeLaPlanta(listaTipoPlantas);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void insertarTiposDeLaPlanta(List<Tipo_Planta> listaTipoPlantas) throws SQLException {
+        Statement consulta;
+        consulta=conexion.createStatement();
+            listaTipoPlantas.forEach(tipoPlanta -> {
+                try {
+                    consulta.executeUpdate(String.format("INSERT INTO Tipo_Plantas_Plantas values (%d,(SELECT MAX(Codigo) FROM Productos))",tipoPlanta.getId()));
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+
+
     }
 //    public static boolean insertarTipoPlanta(TipoPlanta tipoPlanta){
 //        boolean usuarioInsertadoConExito=false;Statement consulta;
@@ -308,6 +336,20 @@ public class DataAccess{
         return actualizadoConExito;
     }
 
+    public static Tipo_Planta obtenerTipoPlanta(int idTipoPlanta){
+        Tipo_Planta tipo_planta=null;ResultSet resultado=null;
+        Statement consulta;
+        try {
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT * FROM Tipo_Plantas Where Id=%d",idTipoPlanta));
+            if(resultado.next()){
+                tipo_planta=new Tipo_Planta(idTipoPlanta,resultado.getString("Tipo"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tipo_planta;
+    }
 
     public static boolean insertarProductoEnPedido(Factura factura,Producto producto,int cantidadProducto) {//en procesos de hacerlo
         boolean insertadoConExito=false;

@@ -11,7 +11,7 @@ CREATE TABLE Productos(
                          Unidades_Disponibles int NULL,
 )
 CREATE TABLE Tipo_Plantas(
-                            Id int PRIMARY KEY NOT NULL,
+                            Id int IDENTITY(1,1) PRIMARY KEY NOT NULL,
                             Tipo varchar(15) NOT NULL
 )
 

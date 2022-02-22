@@ -3,18 +3,37 @@ package mensaje;
 public class Mensaje{
 
     private final static String
-    CONTRASENHIA_INVALIDA="contrasenhia inválida, la longitud debe ser mayor de 6 y contener numeros y letras",
-    PRECIO_INVALIDO="Introduce un precio adecuado para el tipo de producto,recuerda que no puede tener más de 2 decimales, ni más de 6 cifras",
+            TIPO_PLANTA_ANHIADIDO="Tipo de la planta asignado a la planta con éxito",TIPO_PLANTA_NO_ENCONTRADO="El id no corresponde con ningún id de tipo planta",ERROR_NUMEROS="Introduce un caracter numérico",CLIENTE_INSERTADO="El cliente ha sido insertado con éxito",CLIENTE_NO_INSERTADO="El cliente no se ha podido insertar con éxito, revisa que no haya uno introducido con el mismo dni o que estes conectado adecuadamente a la base de datos",
+            CONTRASENHIA_INVALIDA="contrasenhia inválida, la longitud debe ser mayor de 6 y contener numeros y letras",
+            PRECIO_INVALIDO="Precio inadecuado para el tipo de producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras",
             MENU_TIPO_PRODUCTO= """
             ¿De qué será el producto?
             1) Jardinería
             2) Planta
             """,CODIGO_POSTAL_INVALIDO="Introduce un código postal español válido",ERROR_LONGITUD_DATO="El dato introducido tiene una longitud inválida, el rango sería -> la máxima longitud: %d y la minima: %d",ERROR_LONGITUD_NOMBRE="El usuario no puede tener un nombre cuya longitud sea menor a 1 carácter, ni podrá ser superior a 30",
-    CORREO="Introduce el correo del cliente:", UNIDADES_DISPONIBLES="Introduce las unidades que estarán disponibles del producto:",DESCRIPCION="Introduce la descripción del producto:",PRECIO="Introduce el precio que quieres que tenga el producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras:",
-    TELEFONO="Introduce el teléfono del cliente(recuerda que debe ser uno español para que sea válido):",TIPO_PLANTA="Introduce el tipo de planta que quieres añadir",ID_TIPO_PLANTA="Introduce el id del tipo planta que tiene la planta:",
-    CIUDAD="Introduce la ciudad en la que vive el cliente:",CODIGO_POSTAL="Introduce el codigo postal que deseas que tenga el cliente",DIRECCION="Introduce la dirección que deseas que tenga el cliente:",ES_GESTOR="Introduce 0 si quieres que sea vendedor y 1 si quieres que sea gestor",USUARIO="Introduce el nombre de usuario que tendrá dicho usuario:",CONTRASENHIA="Introduce la contraseña que tendrá el usuario,la longitud debe ser mayor de 6 y contener numeros y letras:",
+            CORREO="Introduce el correo del cliente:", UNIDADES_DISPONIBLES="Introduce las unidades que estarán disponibles del producto:",DESCRIPCION="Introduce la descripción del producto:",PRECIO="Introduce el precio que quieres que tenga el producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras:",
+            TELEFONO="Introduce el teléfono del cliente(recuerda que debe ser uno español para que sea válido):",TIPO_PLANTA="Introduce el tipo de planta que quieres añadir",ID_TIPO_PLANTA="Introduce el id del tipo planta que tiene la planta:",
+            CIUDAD="Introduce la ciudad en la que vive el cliente:",CODIGO_POSTAL="Introduce el codigo postal que deseas que tenga el cliente",DIRECCION="Introduce la dirección que deseas que tenga el cliente:",ES_GESTOR="Introduce 0 si quieres que sea vendedor y 1 si quieres que sea gestor",USUARIO="Introduce el nombre de usuario que tendrá dicho usuario:",CONTRASENHIA="Introduce la contraseña que tendrá el usuario,la longitud debe ser mayor de 6 y contener numeros y letras:",
             DNI="Introduce el dni que deseas que tenga el cliente(recuerda que debe ser uno español para que sea válido):",NOMBRE_CLIENTE="Introduce el nombre que deseas que tenga el cliente:",CANTIDAD_DE_PRODUCTO_INVALIDA="No queda esa cantidad de productos disponibles", OPCION_FINALIZAR="1) Finalizar Factura", CANTIDAD_PRODUCTO="Introduce la cantidad de producto que deseas vender", TELEFONO_INVALIDO="Teléfono inválido, introduce un teléfono español de 9 dígitos",TELEFONO_NO_ENCONTRADO="No hay ningún teléfono en la base de datos que corresponda con el introducido";
 
+    public static void imprimirTipoPlantaExito(){
+        System.out.println(TIPO_PLANTA_ANHIADIDO);
+    }
+    public static void imprimirErrorTipoPlantaNoEncontrado(){
+        System.out.println(TIPO_PLANTA_NO_ENCONTRADO);
+    }
+
+    public static void imprimirErrorCaracteresNumericos(){
+        System.out.println(ERROR_NUMEROS);
+    }
+
+    public static void imprimirClienteInsertadoConExito(){
+        System.out.println(CLIENTE_INSERTADO);
+    }
+
+    public static void imprimirErroClienteNoInsertado(){
+        System.out.println(CLIENTE_NO_INSERTADO);
+    }
 
     public static void imprimirErrorContrasenhiaInvalida(){
         System.out.println(CONTRASENHIA_INVALIDA);
@@ -246,7 +265,7 @@ public class Mensaje{
 
 
     public static void retrocederHaciaOpcionAnterior(){
-        System.out.println("0)Retroceder a introducir el id del producto");
+        System.out.println("0)Retroceder la opción anterior");
     }
 
     public static void salirDeLaVenta(){
