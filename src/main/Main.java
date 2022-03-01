@@ -88,10 +88,10 @@ public class Main {
                 modificarTipoPlanta();
             }
             case "4"->{
-                borrarTipoPlanta();
+                modificarUsuario();
             }
             case "5"->{
-                modificarUsuario();
+
             }
         }
     }
@@ -152,8 +152,7 @@ public class Main {
             Mensaje.introducirCodigoProducto();
             Mensaje.retrocederHaciaOpcionAnterior();
             codigoProducto=teclado.nextLine();
-            if(!codigoProducto.equals("0") && codigoProducto.matches("[+-]?\\d*(\\.\\d+)?")) {
-                producto = DataAccess.obtenerProducto(Integer.parseInt(codigoProducto));
+            if(!codigoProducto.equals("0") && codigoProducto.matches("[+-]?\\d*(\\.\\d+)?") && (producto = DataAccess.obtenerProducto(Integer.parseInt(codigoProducto)))!=null) {
                 esPlanta=DataAccess.consultarSiProductoEsPlanta(producto);
                 modificarAtributosProducto(producto,esPlanta);
             }

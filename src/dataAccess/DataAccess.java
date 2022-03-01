@@ -118,15 +118,14 @@ public class DataAccess{
         return factura;
     }
 
-    public static boolean modificarTipoPlantaDeUnaPlanta(int idPlanta,int idTipoPlanta,int idNuevoTipoPlanta){
+    public static boolean modificarTipoPlantaDeUnaPlanta(int codigoPlanta,int idTipoPlanta,int idNuevoTipoPlanta){
         boolean tipoPlantaModificadoConExito=false;Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("UPDATE Tipo_Plantas_Plantas SET Id_Tipo_Planta=%d Where Id_Tipo_Planta=%d AND Codigo_Planta=%d",idNuevoTipoPlanta,idPlanta,idTipoPlanta));
-            tipoPlantaModificadoConExito=true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            if(consulta.executeUpdate(String.format("UPDATE Tipo_Plantas_Plantas SET Id_Tipo_Planta=%d Where Id_Tipo_Planta=%d AND Codigo_Planta=%d",idNuevoTipoPlanta,idTipoPlanta,codigoPlanta))!=0) {
+                tipoPlantaModificadoConExito = true;
+            }
+        } catch (SQLException e) {}
         return tipoPlantaModificadoConExito;
     }
     public static boolean modificarCliente(Cliente cliente){
@@ -157,7 +156,7 @@ public class DataAccess{
         boolean productoModificadoConExito=false;Statement consulta;
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("UPDATE Productos SET Descripcion='%s',Precio_Unitario=%d,Unidades_Disponibles=%d",producto.getDescripcion(),String.valueOf(producto.getPrecioUnitario()).replace(',','.'),producto.getUnidadesDisponibles()));
+            consulta.executeUpdate(String.format("UPDATE Productos SET Descripcion='%s',Precio_Unitario=%s,Unidades_Disponibles=%d Where Codigo=%d",producto.getDescripcion(),String.valueOf(producto.getPrecioUnitario()).replace(',','.'),producto.getUnidadesDisponibles(),producto.getCodigo()));
             productoModificadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -227,7 +226,7 @@ public class DataAccess{
         boolean productoInsertadoConExito=false;Statement consulta;String precioUnitario="";
         try {
             consulta=conexion.createStatement();
-            consulta.executeUpdate(String.format("INSERT INTO Productos(Descripcion,Precio_Unitario,Unidades_Disponibles) VALUES ('%s',%s,%d,)",producto.getDescripcion(),String.valueOf(producto.getPrecioUnitario()).replace(',','.'),producto.getUnidadesDisponibles()));
+            consulta.executeUpdate(String.format("INSERT INTO Productos(Descripcion,Precio_Unitario,Unidades_Disponibles) VALUES ('%s',%s,%d)",producto.getDescripcion(),String.valueOf(producto.getPrecioUnitario()).replace(',','.'),producto.getUnidadesDisponibles()));
             productoInsertadoConExito=true;
         } catch (SQLException e) {
             e.printStackTrace();
