@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -25,8 +26,7 @@ public class DataAccess{
     }
 
     public static boolean incializarConexion() {
-        Properties configuracion = new Properties();
-        boolean conexionExitosa=false;
+        Properties configuracion = new Properties();boolean conexionExitosa=false;
         try (InputStream is = new FileInputStream(PROPERTIESFILEPATH)) {
             configuracion.load(is);
             conexion = DriverManager.getConnection(configuracion.getProperty("URL"), configuracion.getProperty("USUARIO"), configuracion.getProperty("CLAVE"));
@@ -45,9 +45,9 @@ public class DataAccess{
         Statement consulta;ResultSet resultado=null;Usuario usuarioEncontrado=null;
         try {
             consulta=conexion.createStatement();
-            resultado=consulta.executeQuery(String.format("SELECT Usuario,Contrasenhia,EsGestor FROM USUARIOS WHERE Usuario='%s' AND Contrasenhia='%s'",usuario,contrasenhia));
+            resultado=consulta.executeQuery(String.format("SELECT Id,Usuario,Contrasenhia,EsGestor FROM USUARIOS WHERE Usuario='%s' AND Contrasenhia='%s'",usuario,contrasenhia));
             if(resultado.next()){
-                usuarioEncontrado=new Usuario(resultado.getString("usuario"),resultado.getString("contrasenhia"),resultado.getBoolean("esGestor"));
+                usuarioEncontrado=new Usuario(resultado.getInt("Id"),resultado.getString("usuario"),resultado.getString("contrasenhia"),resultado.getBoolean("esGestor"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -112,9 +112,7 @@ public class DataAccess{
             if(resultado.next()) {
                 factura = new Factura(resultado.getInt("Id"),cliente.getDni(),usuario.getId(),tiempo,0);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) {}
         return factura;
     }
 
@@ -407,7 +405,6 @@ public class DataAccess{
             e.printStackTrace();
         }
         return existe;
-
     }
 
     public static Usuario obtenerUsuarioPorDni(String dni){
@@ -450,10 +447,29 @@ public class DataAccess{
             consulta=conexion.createStatement();
             consulta.executeUpdate(String.format("INSERT INTO PRODUCTOS_FACTURAS VALUES(%d,%d,%d)",factura.getId(),cantidadProducto,producto.getCodigo()));
             insertadoConExito=true;
+        } catch (SQLException e) {}
+        return  insertadoConExito;
+    }
+
+ public static void aplicarDescuentoClienteRegistrado(int idFactura){
+     Statement consulta;
+     try {
+         consulta=conexion.createStatement();
+         consulta.executeUpdate(String.format("UPDATE Facturas Set Importe=Importe*0.95 Where Id=%d",idFactura));
+     }catch (SQLException e) {}
+ }
+
+
+    public static List<FacturaProducto> obtenerFactura(int idFactura){
+         Statement consulta;ResultSet resultado=null;List<FacturaProducto>listaFacturaProductos=new LinkedList<FacturaProducto>();
+        try {
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT P.Codigo,P.Descripcion,P.Precio_Unitario,PF.Cantidad,(PF.Cantidad*P.Precio_Unitario) AS Total FROM Productos_Facturas as PF INNER JOIN Productos AS P ON PF.Codigo_Producto=P.Codigo WHERE PF.Id_Factura=%d",idFactura));
+            while(resultado.next()){listaFacturaProductos.add(new FacturaProducto(resultado.getInt("Codigo"),resultado.getInt("Cantidad"),resultado.getString("Descripcion"),resultado.getDouble("Total"),resultado.getDouble("Precio_Unitario"))); }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return  insertadoConExito;
+        return listaFacturaProductos;
     }
 
     public static boolean borrarFactura(int idFactura){
@@ -468,4 +484,105 @@ public class DataAccess{
         }
     return borrado;
     }
+
+    public static List<InformeVenta> obtenerImporteVentasProductosMensuales(int anhio,int mes){
+        List<InformeVenta> informeMensual=new LinkedList<InformeVenta>();
+        informeMensual.add(obtenerImporteVentasTodosLosProductosMensuales(anhio,mes));
+        informeMensual.add(obtenerImporteVentasProductosPlantaMensuales(anhio,mes));
+        informeMensual.add(obtenerImporteVentasProductosJardineriaMensuales(anhio,mes));
+        return informeMensual;
+    }
+    private static InformeVenta obtenerImporteVentasTodosLosProductosMensuales(int anhio,int mes){
+        ResultSet resultado;Statement consulta;InformeVenta informe=null;
+        try{
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT * FROM  TotalVentasPorMesEnTodosLosProductos(%d,%d)",mes,anhio));
+            if(resultado.next()){
+               informe=new InformeVenta("Todos los productos",resultado.getDouble("ImporteTotal"),resultado.getInt("CantidadTotal"));
+            }
+        }catch(SQLException ex){}
+        return informe;
+    }
+    private static InformeVenta obtenerImporteVentasProductosPlantaMensuales(int anhio,int mes){
+        ResultSet resultado;Statement consulta;InformeVenta informe=null;
+        try{
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT * FROM  TotalVentasPorMesEnLosProductosPlanta(%d,%d)",mes,anhio));
+            if(resultado.next()){
+                informe=new InformeVenta("Productos Planta",resultado.getDouble("ImporteTotalPlantas"),resultado.getInt("CantidadTotalPlantas"));
+            }
+        }catch(SQLException ex){}
+        return informe;
+    }
+    private static InformeVenta obtenerImporteVentasProductosJardineriaMensuales(int anhio,int mes){
+        ResultSet resultado;Statement consulta;InformeVenta informe=null;
+        try{
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT * FROM  TotalVentasPorMesEnLosProductosJardineria(%d,%d)",mes,anhio));
+            if(resultado.next()){
+                informe=new InformeVenta("Productos Jardineria",resultado.getDouble("ImporteTotalJardineria"),resultado.getInt("CantidadTotalJardineria"));
+            }
+        }catch(SQLException ex){}
+        return informe;
+    }
+
+    public static List<InformeVenta> obtenerImporteVentasProductosAnuales(int anhio){
+        List<InformeVenta> informeAnual=new LinkedList<InformeVenta>();
+        informeAnual.add(obtenerImporteVentasTodosLosProductosAnuales(anhio));
+        informeAnual.add(obtenerImporteVentasProductosPlantaAnuales(anhio));
+        informeAnual.add(obtenerImporteVentasProductosJardineriaAnuales(anhio));
+        return informeAnual;
+    }
+    private static InformeVenta obtenerImporteVentasTodosLosProductosAnuales(int anhio){
+        ResultSet resultado;Statement consulta;InformeVenta informe=null;
+        try{
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT * FROM  TotalVentasPorAnhioEnTodosLosProductos(%d)",anhio));
+            if(resultado.next()){
+                informe=new InformeVenta("Todos los productos",resultado.getDouble("ImporteTotal"),resultado.getInt("CantidadTotal"));
+            }
+        }catch(SQLException ex){}
+        return informe;
+    }
+    private static InformeVenta obtenerImporteVentasProductosPlantaAnuales(int anhio){
+        ResultSet resultado;Statement consulta;InformeVenta informe=null;
+        try{
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT * FROM  TotalVentasPorAnhioEnLosProductosPlanta(%d)",anhio));
+            if(resultado.next()){
+                informe=new InformeVenta("Productos Planta",resultado.getDouble("ImporteTotalPlantas"),resultado.getInt("CantidadTotalPlantas"));
+            }
+        }catch(SQLException ex){}
+        return informe;
+    }
+    private static InformeVenta obtenerImporteVentasProductosJardineriaAnuales(int anhio){
+        ResultSet resultado;Statement consulta;InformeVenta informe=null;
+        try{
+            consulta=conexion.createStatement();
+            resultado=consulta.executeQuery(String.format("SELECT * FROM  TotalVentasPorAnhioEnLosProductosJardineria(%d)",anhio));
+            if(resultado.next()){
+                informe=new InformeVenta("Productos Jardineria",resultado.getDouble("ImporteTotalJardineria"),resultado.getInt("CantidadTotalJardineria"));
+            }
+        }catch(SQLException ex){}
+        return informe;
+    }
+
+
+
+
+//    private static InformeVenta obtenerImporteVentasProductosPlantaMensuales(){
+//
+//    }
+//    private static InformeVenta obtenerImporteVentasJardineriaMensuales(){
+//
+//    }
+//
+//
+//
+//
+//
+//    public static List<InformeVenta> obtenerImporteVentasProductosAnuales(int anhio){}
+
+
+
 }

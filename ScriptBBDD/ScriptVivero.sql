@@ -99,7 +99,7 @@ CREATE TABLE Productos_Facturas(
 
 
 
-    GO
+GO
 CREATE OR ALTER PROCEDURE BorrarFactura
     @idFacturaABorrar int
     AS
@@ -129,6 +129,69 @@ UPDATE Facturas SET
     Importe+=(SELECT I.Cantidad*P.Precio_Unitario FROM inserted AS I INNER JOIN Productos AS P ON I.Codigo_Producto=P.Codigo)
 WHERE Id=(SELECT Id_Factura FROM inserted)
 UPDATE Productos SET Unidades_Disponibles-=(SELECT Cantidad  FROM inserted) WHERE Codigo=(SELECT Codigo_Producto FROM inserted)
-
 END
+GO
+
+GO
+CREATE OR ALTER FUNCTION TotalVentasPorMesEnTodosLosProductos(@Mes SMALLINT,@Year SMALLINT)
+    RETURNS TABLE
+    AS
+RETURN
+(SELECT  SUM(PF.Cantidad) AS CantidadTotal,SUM(PF.CANTIDAD*P.Precio_Unitario) AS ImporteTotal
+FROM Productos_Facturas as PF INNER JOIN Productos AS P ON PF.Codigo_Producto=P.Codigo INNER
+JOIN Facturas AS F ON PF.Id_Factura=F.Id WHERE YEAR(F.Fecha)=@Year AND MONTH(F.Fecha)=@Mes )
+GO
+
+
+GO
+CREATE OR ALTER FUNCTION TotalVentasPorMesEnLosProductosPlanta(@Mes SMALLINT,@Year SMALLINT)
+    RETURNS TABLE
+    AS
+RETURN
+(SELECT  SUM(PF.Cantidad) AS CantidadTotalPlantas,SUM(PF.CANTIDAD*P.Precio_Unitario) AS ImporteTotalPlantas
+FROM Productos_Facturas as PF INNER JOIN Productos AS P ON PF.Codigo_Producto=P.Codigo INNER
+JOIN ProductosPlanta AS PP ON P.Codigo=PP.Codigo INNER JOIN Facturas AS F ON PF.Id_Factura=F.Id WHERE YEAR(F.Fecha)=@Year AND MONTH(F.Fecha)=@Mes )
+GO
+
+
+GO
+CREATE OR ALTER FUNCTION TotalVentasPorMesEnLosProductosJardineria(@Mes SMALLINT,@Year SMALLINT)
+    RETURNS TABLE
+    AS
+RETURN
+(SELECT  SUM(PF.Cantidad) AS CantidadTotalJardineria,SUM(PF.CANTIDAD*P.Precio_Unitario) AS ImporteTotalJardineria
+FROM Productos_Facturas as PF  INNER JOIN Productos AS P ON PF.Codigo_Producto=P.Codigo
+INNER JOIN ProductosJardineria AS PJ ON P.Codigo=PJ.Codigo INNER JOIN Facturas AS F ON PF.Id_Factura=F.Id WHERE YEAR(F.Fecha)=@Year AND MONTH(F.Fecha)=@Mes)
+GO
+
+GO
+CREATE OR ALTER FUNCTION TotalVentasPorAnhioEnTodosLosProductos(@Year SMALLINT)
+    RETURNS TABLE
+    AS
+RETURN
+(SELECT  SUM(PF.Cantidad) AS CantidadTotal,SUM(PF.CANTIDAD*P.Precio_Unitario) AS ImporteTotal
+FROM Productos_Facturas as PF INNER JOIN Productos AS P ON PF.Codigo_Producto=P.Codigo INNER
+JOIN Facturas AS F ON PF.Id_Factura=F.Id WHERE YEAR(F.Fecha)=@Year)
+GO
+
+
+GO
+CREATE OR ALTER FUNCTION TotalVentasPorAnhioEnLosProductosPlanta(@Year SMALLINT)
+    RETURNS TABLE
+    AS
+RETURN
+(SELECT  SUM(PF.Cantidad) AS CantidadTotalPlantas,SUM(PF.CANTIDAD*P.Precio_Unitario) AS ImporteTotalPlantas
+FROM Productos_Facturas as PF INNER JOIN Productos AS P ON PF.Codigo_Producto=P.Codigo INNER
+JOIN ProductosPlanta AS PP ON P.Codigo=PP.Codigo INNER JOIN Facturas AS F ON PF.Id_Factura=F.Id WHERE YEAR(F.Fecha)=@Year)
+GO
+
+
+GO
+CREATE OR ALTER FUNCTION TotalVentasPorAnhiosEnLosProductosJardineria(@Year SMALLINT)
+    RETURNS TABLE
+    AS
+RETURN
+(SELECT  SUM(PF.Cantidad) AS CantidadTotalJardineria,SUM(PF.CANTIDAD*P.Precio_Unitario) AS ImporteTotalJardineria
+FROM Productos_Facturas as PF  INNER JOIN Productos AS P ON PF.Codigo_Producto=P.Codigo
+INNER JOIN ProductosJardineria AS PJ ON P.Codigo=PJ.Codigo INNER JOIN Facturas AS F ON PF.Id_Factura=F.Id WHERE YEAR(F.Fecha)=@Year)
 GO

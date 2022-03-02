@@ -55,4 +55,10 @@ private double importe;
     public void setImporte(double importe) {
         this.importe = importe;
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("Factura{ id=").append(id).append(", idVendedor=").append(idUsuario)
+                .append(", dniCliente='").append(dniCliente).append(", fecha=").append(fecha).toString();
+    }
 }

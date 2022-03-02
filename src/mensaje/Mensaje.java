@@ -1,5 +1,12 @@
 package mensaje;
 
+import entidades.Factura;
+import entidades.FacturaProducto;
+import entidades.InformeVenta;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Mensaje{
 
     private final static String
@@ -42,8 +49,6 @@ public class Mensaje{
             2) Modificar Producto
             3) Modificar Tipo de Planta
             4) Modificar Usuario
-            5) Modificar Factura
-            
             """,MENU_PRINCIPAL_BORRADO="""
                 0) Retroceder
                 1) Borrar Cliente
@@ -53,21 +58,80 @@ public class Mensaje{
                 5) Borrar Usuario
                 6) Borrar Tipo de Planta asignado a una Planta
                 """,ERROR_MODIFICACION="El elemento no ha podido ser modificado, revisa tu conexión con la bbdd",TIPO_PLANTA_INVALIDO="El id introducido es inválido, introduce uno numérico existente",PEDIR_ID_FACTURA="Introduce el id de la factura que deseas eliminar",ELEMENTO_BORRADO="Elemento borrado con éxito",ELEMENTO_NO_ENCONTRADO="El id/Dni/Codigo del elemento introducido no existe",ELEMENTO_CON_DEPENDENCIAS="No se ha podido eliminar dicho elemento, ya que tiene dependencias",TIPO_PLANTA_INSERTADO_EXITO="Tipo planta insertado con éxito",TIPO_PLANTA_INSERCION_FALLIDA="No se ha podido realizar la inserción de ese tipo planta, revisa tu conexión con la bbdd",
-            TIPO_PLANTA_ANHIADIDO="Tipo de la planta asignado a la planta con éxito",TIPO_PLANTA_NO_ENCONTRADO="El id no corresponde con ningún id de tipo planta",ERROR_NUMEROS="Introduce un caracter numérico",CLIENTE_INSERTADO="El cliente ha sido insertado con éxito",CLIENTE_NO_INSERTADO="El cliente no se ha podido insertar con éxito, revisa que no haya uno introducido con el mismo dni o que estes conectado adecuadamente a la base de datos",
+            TIPO_PLANTA_ANHIADIDO="Tipo de la planta asignado a la planta con éxito",FACTURA_GUARDADA="La factura se ha guardado exitosamente",TIPO_PLANTA_NO_ENCONTRADO="El id no corresponde con ningún id de tipo planta",ERROR_NUMEROS="Introduce un caracter numérico",CLIENTE_INSERTADO="El cliente ha sido insertado con éxito",CLIENTE_NO_INSERTADO="El cliente no se ha podido insertar con éxito, revisa que no haya uno introducido con el mismo dni o que estes conectado adecuadamente a la base de datos",
             CONTRASENHIA_INVALIDA="contrasenhia inválida, la longitud debe ser mayor de 6 y contener numeros y letras",MODIFICADO_CON_EXITO="Elemento modificado con éxito",USUARIO_INSERTADO_EXITO="El usuario ha sido insertado con éxito",ERROR_INSERCION_USUARIO="Ha ocurrido un error durante la isnercion del usuario y no se ha podido insertar, revisa la conexión con la base de datos",
             PRECIO_INVALIDO="Precio inadecuado para el tipo de producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras",USUARIO_YA_EXISTE="El nombre de usuario introducido ya existe en la base de datos, usa otro",
             MENU_TIPO_PRODUCTO= """
             ¿De qué será el producto?
             1) Jardinería
             2) Planta
-            """,BORRAR_CLIENTE="Introduce el dni del cliente que deseas eliminar" ,CODIGO_POSTAL_INVALIDO="Introduce un código postal español válido",ERROR_LONGITUD_DATO="El dato introducido tiene una longitud inválida, el rango sería -> la máxima longitud: %d y la minima: %d",ERROR_LONGITUD_NOMBRE="El usuario no puede tener un nombre cuya longitud sea menor a 1 carácter, ni podrá ser superior a 30",
-            CORREO="Introduce el correo del cliente:", UNIDADES_DISPONIBLES="Introduce las unidades que estarán disponibles del producto:",DESCRIPCION="Introduce la descripción del producto:",PRECIO="Introduce el precio que quieres que tenga el producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras:",
-            TELEFONO="Introduce el teléfono (recuerda que debe ser uno español para que sea válido):",TIPO_PLANTA="Introduce el tipo de planta:",ID_TIPO_PLANTA="Introduce el id del tipo planta:",
-            CIUDAD="Introduce la ciudad:",NUEVO_ID_TIPO_PLANTA="Introduce el id del nuevo tipo de planta que quieres que tenga:",CODIGO_POSTAL="Introduce el codigo postal(Recuerda que debe ser uno español válido)",DIRECCION="Introduce la dirección:",ES_GESTOR="Introduce 1 si quieres que sea vendedor y 2 si quieres que sea gestor",USUARIO="Introduce el nombre de usuario:",CONTRASENHIA="Introduce la contraseña que tendrá el usuario,la longitud debe ser mayor de 6 y contener numeros y letras:",
+            """,MENU_INFORMES= """
+            0) Retroceder
+            1) Generar informe ventas totales en un mes 
+            2) Generar informe ventas totales en un año
+            3) Mostrar lista de productos indicando el tipo
+            4) Mostrar lista de clientes
+            5) Mostrar lista de vendedores
+            6) Mostrar lista de gestores
+            7) Mostrar facturas de un cliente concreto
+            """,BORRAR_CLIENTE="Introduce el dni del cliente que deseas eliminar" ,CLIENTE_GENERICO="1) Si quieres usar el cliente genérico",CODIGO_POSTAL_INVALIDO="Introduce un código postal español válido",ERROR_LONGITUD_DATO="El dato introducido tiene una longitud inválida, el rango sería -> la máxima longitud: %d y la minima: %d",ERROR_LONGITUD_NOMBRE="El usuario no puede tener un nombre cuya longitud sea menor a 1 carácter, ni podrá ser superior a 30",
+            CORREO="Introduce el correo del cliente:", PEDIR_ANHIO="Introduce un año válido:",UNIDADES_DISPONIBLES="Introduce las unidades que estarán disponibles del producto:",DESCRIPCION="Introduce la descripción del producto:",PRECIO="Introduce el precio que quieres que tenga el producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras:",
+            TELEFONO="Introduce el teléfono (recuerda que debe ser uno español para que sea válido):",PEDIR_MES="Introduce un més del año:",TIPO_PLANTA="Introduce el tipo de planta:",ID_TIPO_PLANTA="Introduce el id del tipo planta:",
+            CIUDAD="Introduce la ciudad:",ERROR_NO_HAY_DATOS_EN_ESA_FECHA="Parece que no hay datos en esa fecha",NUEVO_ID_TIPO_PLANTA="Introduce el id del nuevo tipo de planta que quieres que tenga:",CODIGO_POSTAL="Introduce el codigo postal(Recuerda que debe ser uno español válido)",DIRECCION="Introduce la dirección:",ES_GESTOR="Introduce 1 si quieres que sea vendedor y 2 si quieres que sea gestor",USUARIO="Introduce el nombre de usuario:",CONTRASENHIA="Introduce la contraseña que tendrá el usuario,la longitud debe ser mayor de 6 y contener numeros y letras:",
             DNI="Introduce el dni(recuerda que debe ser uno español para que sea válido):",USUARIO_NO_ENCONTRADO="No se ha encontrado ningun usuario con ese nombre de usuario y contraseña",NOMBRE_CLIENTE="Introduce el nombre:",CANTIDAD_DE_PRODUCTO_INVALIDA="No queda esa cantidad de productos disponibles", OPCION_FINALIZAR="1) Finalizar Factura", CANTIDAD_PRODUCTO="Introduce la cantidad de producto que deseas vender", TELEFONO_INVALIDO="Teléfono inválido, introduce un teléfono español de 9 dígitos",TELEFONO_NO_ENCONTRADO="No hay ningún teléfono en la base de datos que corresponda con el introducido";
+
+
+    public static void pedirAnhio(){
+        System.out.println(PEDIR_ANHIO);
+    }
+
+    public static void imprimirInformeVentas(List<InformeVenta> informeDeVentas){
+        if(informeDeVentas!=null && !informeDeVentas.isEmpty()){
+            informeDeVentas.forEach(informeVenta -> {
+                if(informeVenta!=null) {
+                    System.out.println(String.format("Tipo: %s", informeVenta.getTipo()));
+                    System.out.println(String.format("Cantidad: %d ", informeVenta.getCantidadTotal()));
+                    System.out.println(String.format("Importe total: %s ", informeVenta.getImporteTotal()));
+                }
+            });
+        }else{
+            System.out.println(ERROR_NO_HAY_DATOS_EN_ESA_FECHA);
+        }
+
+    }
+
+    public static void pedirMes(){
+        System.out.println(PEDIR_MES);
+    }
+
+    public static void imprimirMenuInformes(){
+        System.out.println(MENU_INFORMES);
+    }
+
+    public static void imprimirOpcionClienteGenerico(){
+        System.out.println(CLIENTE_GENERICO);
+    }
+
+    public static void imprimirFacturaGuardadDeFormaExitosa(){
+        System.out.println(FACTURA_GUARDADA);
+    }
 
     public static void imprimirErrorEnLaModificacion(){
         System.out.println(ERROR_MODIFICACION);
+    }
+
+    public static void imprimirFactura(Factura factura,List<FacturaProducto> listaFacturaProducto){
+        double totalFactura=0;
+        System.out.println(factura);
+        for (FacturaProducto lineaProducto:listaFacturaProducto) {
+            System.out.println(String.format("Codigo:%d",lineaProducto.getCodigo()));
+            System.out.println(String.format("Descripción:%s",lineaProducto.getDescripcion()));
+            System.out.println(String.format("Precio Unitario:%s",lineaProducto.getPrecioUnitario()));
+            System.out.println(String.format("Cantidad:%d",lineaProducto.getCantidad()));
+            System.out.println(String.format("Total de la Línea:%s",lineaProducto.getTotal()));
+            totalFactura+=lineaProducto.getTotal();
+        }
+        System.out.println(String.format("El total de la factura es de: %s €",!factura.getDniCliente().equals("77863714C")?(totalFactura*0.95):totalFactura));
     }
 
     public static void imprimirElementoModificadoConExito(){

@@ -106,7 +106,8 @@ public class Usuario {
         this.id = id;
         this.esGestor = esGestor;
     }
-    public Usuario(String usuario, String contrasenhia, boolean esGestor) {
+    public Usuario(int id,String usuario, String contrasenhia, boolean esGestor) {
+        this.id = id;
         Usuario = usuario;
         this.contrasenhia = contrasenhia;
         this.esGestor = esGestor;
