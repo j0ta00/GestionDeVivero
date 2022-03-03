@@ -60,7 +60,7 @@ public class Mensaje{
                 """,ERROR_MODIFICACION="El elemento no ha podido ser modificado, revisa tu conexión con la bbdd",TIPO_PLANTA_INVALIDO="El id introducido es inválido, introduce uno numérico existente",PEDIR_ID_FACTURA="Introduce el id de la factura que deseas eliminar",ELEMENTO_BORRADO="Elemento borrado con éxito",ELEMENTO_NO_ENCONTRADO="El id/Dni/Codigo del elemento introducido no existe",ELEMENTO_CON_DEPENDENCIAS="No se ha podido eliminar dicho elemento, ya que tiene dependencias",TIPO_PLANTA_INSERTADO_EXITO="Tipo planta insertado con éxito",TIPO_PLANTA_INSERCION_FALLIDA="No se ha podido realizar la inserción de ese tipo planta, revisa tu conexión con la bbdd",
             TIPO_PLANTA_ANHIADIDO="Tipo de la planta asignado a la planta con éxito",FACTURA_GUARDADA="La factura se ha guardado exitosamente",TIPO_PLANTA_NO_ENCONTRADO="El id no corresponde con ningún id de tipo planta",ERROR_NUMEROS="Introduce un caracter numérico",CLIENTE_INSERTADO="El cliente ha sido insertado con éxito",CLIENTE_NO_INSERTADO="El cliente no se ha podido insertar con éxito, revisa que no haya uno introducido con el mismo dni o que estes conectado adecuadamente a la base de datos",
             CONTRASENHIA_INVALIDA="contrasenhia inválida, la longitud debe ser mayor de 6 y contener numeros y letras",MODIFICADO_CON_EXITO="Elemento modificado con éxito",USUARIO_INSERTADO_EXITO="El usuario ha sido insertado con éxito",ERROR_INSERCION_USUARIO="Ha ocurrido un error durante la isnercion del usuario y no se ha podido insertar, revisa la conexión con la base de datos",
-            PRECIO_INVALIDO="Precio inadecuado para el tipo de producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras",USUARIO_YA_EXISTE="El nombre de usuario introducido ya existe en la base de datos, usa otro",
+            PRECIO_INVALIDO="Precio inadecuado para el tipo de producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras",USUARIO_YA_EXISTE="El nombre de usuario introducido ya existe en la base de datos, usa otro",PEDIR_USUARIO="Introduce tu usuario de sql:",PEDIR_CONTRASENHIA="Introduce la contraseña de tu usuario de sql:",
             MENU_TIPO_PRODUCTO= """
             ¿De qué será el producto?
             1) Jardinería
@@ -74,12 +74,37 @@ public class Mensaje{
             5) Mostrar lista de vendedores
             6) Mostrar lista de gestores
             7) Mostrar facturas de un cliente concreto
-            """,BORRAR_CLIENTE="Introduce el dni del cliente que deseas eliminar" ,CLIENTE_GENERICO="1) Si quieres usar el cliente genérico",CODIGO_POSTAL_INVALIDO="Introduce un código postal español válido",ERROR_LONGITUD_DATO="El dato introducido tiene una longitud inválida, el rango sería -> la máxima longitud: %d y la minima: %d",ERROR_LONGITUD_NOMBRE="El usuario no puede tener un nombre cuya longitud sea menor a 1 carácter, ni podrá ser superior a 30",
-            CORREO="Introduce el correo del cliente:", PEDIR_ANHIO="Introduce un año válido:",UNIDADES_DISPONIBLES="Introduce las unidades que estarán disponibles del producto:",DESCRIPCION="Introduce la descripción del producto:",PRECIO="Introduce el precio que quieres que tenga el producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras:",
+            """,BORRAR_CLIENTE="Introduce el dni del cliente que deseas eliminar" ,CONEXION_CORRECTA="Conexión realizada con éxito",CONEXION_INCORRECTA="Conexión fallida, revisa los datos de la conexión",CLIENTE_GENERICO="1) Si quieres usar el cliente genérico",CODIGO_POSTAL_INVALIDO="Introduce un código postal español válido",ERROR_LONGITUD_DATO="El dato introducido tiene una longitud inválida, el rango sería -> la máxima longitud: %d y la minima: %d",ERROR_LONGITUD_NOMBRE="El usuario no puede tener un nombre cuya longitud sea menor a 1 carácter, ni podrá ser superior a 30",
+            CORREO="Introduce el correo del cliente:", PEDIR_ANHIO="Introduce un año válido:",PEDIR_LOCALHOST="Introduce el localhost:",PEDIR_PUERTO="Introduce el puerto para la conexión:",UNIDADES_DISPONIBLES="Introduce las unidades que estarán disponibles del producto:",DESCRIPCION="Introduce la descripción del producto:",PRECIO="Introduce el precio que quieres que tenga el producto, recuerda que no puede tener más de 2 decimales, ni más de 6 cifras:",
             TELEFONO="Introduce el teléfono (recuerda que debe ser uno español para que sea válido):",PEDIR_MES="Introduce un més del año:",TIPO_PLANTA="Introduce el tipo de planta:",ID_TIPO_PLANTA="Introduce el id del tipo planta:",
             CIUDAD="Introduce la ciudad:",ERROR_NO_HAY_DATOS_EN_ESA_FECHA="Parece que no hay datos en esa fecha",NUEVO_ID_TIPO_PLANTA="Introduce el id del nuevo tipo de planta que quieres que tenga:",CODIGO_POSTAL="Introduce el codigo postal(Recuerda que debe ser uno español válido)",DIRECCION="Introduce la dirección:",ES_GESTOR="Introduce 1 si quieres que sea vendedor y 2 si quieres que sea gestor",USUARIO="Introduce el nombre de usuario:",CONTRASENHIA="Introduce la contraseña que tendrá el usuario,la longitud debe ser mayor de 6 y contener numeros y letras:",
             DNI="Introduce el dni(recuerda que debe ser uno español para que sea válido):",USUARIO_NO_ENCONTRADO="No se ha encontrado ningun usuario con ese nombre de usuario y contraseña",NOMBRE_CLIENTE="Introduce el nombre:",CANTIDAD_DE_PRODUCTO_INVALIDA="No queda esa cantidad de productos disponibles", OPCION_FINALIZAR="1) Finalizar Factura", CANTIDAD_PRODUCTO="Introduce la cantidad de producto que deseas vender", TELEFONO_INVALIDO="Teléfono inválido, introduce un teléfono español de 9 dígitos",TELEFONO_NO_ENCONTRADO="No hay ningún teléfono en la base de datos que corresponda con el introducido";
 
+
+    public static void imprimirErrorEnLaConexion(){
+        System.out.println(CONEXION_INCORRECTA);
+
+    }
+    public static void imprimirConexionCorrecta(){
+        System.out.println(CONEXION_CORRECTA);
+
+    }
+
+    public static void setPedirLocalhost(){
+        System.out.println(PEDIR_LOCALHOST);
+    }
+
+    public static void pedirPuerto(){
+        System.out.println(PEDIR_PUERTO);
+    }
+
+    public static void pedirContrsenhiaSQL(){
+        System.out.println(PEDIR_CONTRASENHIA);
+    }
+
+    public static void pedirUsuarioSQL(){
+        System.out.println(PEDIR_USUARIO);
+    }
 
     public static void pedirAnhio(){
         System.out.println(PEDIR_ANHIO);

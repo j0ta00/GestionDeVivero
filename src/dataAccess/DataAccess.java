@@ -2,10 +2,7 @@ package dataAccess;
 
 import entidades.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -15,7 +12,8 @@ import java.util.Properties;
 public class DataAccess{
 
     private static Connection conexion;
-    private static final String PROPERTIESFILEPATH="configuracion.properties";
+    private static final String PROPERTIESFILEPATH="configuracion.properties",URL="jdbc:sqlserver"
+            ,BASE_DE_DATOS="database=MunozArenas;trustServerCertificate=true";
 
     public static Connection getConexion() {
         return conexion;
@@ -25,19 +23,29 @@ public class DataAccess{
         DataAccess.conexion = conexion;
     }
 
+    public static void escribirDatosEnFicheroProperties(String contrasenhia,String usuario,String puerto,String localhost){
+        Properties configuracion = new Properties();
+        try (OutputStream os = new FileOutputStream(PROPERTIESFILEPATH)) {
+            configuracion.setProperty("URL",URL);
+            configuracion.setProperty("BBDD",BASE_DE_DATOS);
+            configuracion.setProperty("CLAVE",contrasenhia);
+            configuracion.setProperty("USUARIO",usuario);
+            configuracion.setProperty("PUERTO",new StringBuilder(":").append(puerto).append(";").toString());
+            configuracion.setProperty("LOCALHOST",new StringBuilder("://").append(localhost).toString());
+            configuracion.store(os,"");
+        }  catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+    }
+
     public static boolean incializarConexion() {
         Properties configuracion = new Properties();boolean conexionExitosa=false;
         try (InputStream is = new FileInputStream(PROPERTIESFILEPATH)) {
             configuracion.load(is);
-            conexion = DriverManager.getConnection(configuracion.getProperty("URL"), configuracion.getProperty("USUARIO"), configuracion.getProperty("CLAVE"));
+            conexion = DriverManager.getConnection((new StringBuilder(configuracion.getProperty("URL")).append(configuracion.getProperty("LOCALHOST")).append(configuracion.getProperty("PUERTO")).append(configuracion.getProperty("BBDD")).toString()), configuracion.getProperty("USUARIO"), configuracion.getProperty("CLAVE"));
             conexionExitosa=true;
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (FileNotFoundException e) {} catch (IOException e) {}
         return conexionExitosa;
     }
 
@@ -566,23 +574,11 @@ public class DataAccess{
         }catch(SQLException ex){}
         return informe;
     }
-
-
-
-
 //    private static InformeVenta obtenerImporteVentasProductosPlantaMensuales(){
 //
 //    }
 //    private static InformeVenta obtenerImporteVentasJardineriaMensuales(){
 //
 //    }
-//
-//
-//
-//
-//
 //    public static List<InformeVenta> obtenerImporteVentasProductosAnuales(int anhio){}
-
-
-
 }

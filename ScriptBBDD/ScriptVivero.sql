@@ -1,9 +1,9 @@
 
 GO
-create database Vivero
+create database MunozArenas
 GO
 GO
-USE Vivero
+USE MunozArenas
 CREATE TABLE Productos(
                           Descripcion varchar(40),
                           Codigo int IDENTITY(1,1) PRIMARY KEY NOT NULL,
@@ -96,8 +96,7 @@ CREATE TABLE Productos_Facturas(
 --select*from Producto_Factura
 --delete from Producto_Factura
 --delete from Factura
-
-
+GO
 
 GO
 CREATE OR ALTER PROCEDURE BorrarFactura

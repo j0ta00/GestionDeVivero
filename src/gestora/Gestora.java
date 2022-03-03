@@ -16,7 +16,6 @@ import static java.sql.DriverManager.getConnection;
 public class Gestora {
 
     private static String path = "ScriptBBDD/ScriptVivero.sql";
-    private final static String PROPERTIESFILEPATH = "configuracion.properties";
     private Factura factura;
     private Cliente cliente;
     private Usuario usuario;

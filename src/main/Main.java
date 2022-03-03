@@ -18,11 +18,33 @@ public class Main {
         new Gestora().Instalador();
         teclado=new Scanner(System.in);
         gestora=new Gestora();
-        DataAccess.incializarConexion();
+        comprobarConexion();
         Logearse();
     }
 
+    public static void comprobarConexion(){
+        boolean datosValidos=false;
+        while(!datosValidos) {
+            pedirDatosConexion();
+            if(DataAccess.incializarConexion()){
+                datosValidos=true;
+                Mensaje.imprimirConexionCorrecta();
+            }else{
+                Mensaje.imprimirErrorEnLaConexion();}}
+    }
 
+    private static void pedirDatosConexion() {
+        String usuario,contrasenhia,puerto,localhost;
+        Mensaje.pedirUsuarioSQL();
+        usuario = teclado.nextLine();
+        Mensaje.pedirContrsenhiaSQL();
+        contrasenhia = teclado.nextLine();
+        Mensaje.setPedirLocalhost();
+        localhost = teclado.nextLine();
+        Mensaje.pedirPuerto();
+        puerto = teclado.nextLine();
+        DataAccess.escribirDatosEnFicheroProperties(contrasenhia,usuario,puerto,localhost);
+    }
 
 
     public static void Logearse(){
