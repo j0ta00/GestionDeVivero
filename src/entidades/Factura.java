@@ -1,14 +1,14 @@
 package entidades;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class Factura{
 private int id,idUsuario;
 private String dniCliente;
-private LocalDate fecha;
+private Date fecha;
 private double importe;
 
-    public Factura(int id, String dniCliente, int idUsuario, LocalDate fecha, double importe) {
+    public Factura(int id, String dniCliente, int idUsuario, Date fecha, double importe) {
         this.id = id;
         this.dniCliente = dniCliente;
         this.idUsuario = idUsuario;
@@ -40,11 +40,11 @@ private double importe;
         this.idUsuario = idUsuario;
     }
 
-    public LocalDate getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
@@ -58,7 +58,7 @@ private double importe;
 
     @Override
     public String toString() {
-        return new StringBuilder("Factura{ id=").append(id).append(", idVendedor=").append(idUsuario)
-                .append(", dniCliente='").append(dniCliente).append(", fecha=").append(fecha).toString();
+        return new StringBuilder("Factura -> { id=").append(id).append(", idVendedor=").append(idUsuario)
+                .append(", dniCliente='").append(dniCliente).append(", fecha=").append(fecha).append(" }").toString();
     }
 }
